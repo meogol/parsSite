@@ -1,23 +1,30 @@
 package connect;
 
 import form.ConnectionForm;
+import form.core.Load;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.HashMap;
 
 public class Connect implements Runnable{
-    private static String url = "https://betwin52436.site/";
+    String connectUrl="/live/Table-Tennis/";
 
+    public Connect(){}
+    public Connect(String connectUrl){
+        this.connectUrl = connectUrl;
+    }
+
+
+    /**
+     * Вывод результатов сбора инфы с сайта в кнсоль
+     * @throws IOException
+     */
     public void printMatch() throws IOException {
 
-        Document doc = Jsoup.connect(url+"ru/live/Table-Tennis/").data("query", "Java")
+        Document doc = Jsoup.connect(Load.getUrl() +"ru"+connectUrl).data("query", "Java")
                 .timeout(10000).userAgent("Mozilla").get();
 
 
@@ -44,60 +51,13 @@ public class Connect implements Runnable{
 
     }
 
-    public static HashMap<String, String> getMenu() throws IOException {
-        HashMap<String, String> menu = new HashMap<>();
-
-        Document doc = Jsoup.connect(url+"ru/live/").data("query", "Java")
-                .timeout(10000).userAgent("Mozilla").get();
-
-        Element sportMenu = doc.getElementsByClass("sport_menu").first();
-        Elements sportsItems = sportMenu.getElementsByClass("link");
-
-        for (Element sport:sportsItems) {
-            String href = sport.attr("href");
-
-            String name = sport.child(1).text();
-            menu.put(name,href);
-        }
-
-        return menu;
-    }
-
-    public String LoadUrl()  {
-        try {
-            String url = "https://kbepha.top/s/15ns?s1=cbb&amp;p=%2Fuser%2Fregistration%2F&amp;fp=";
-
-            URL obj = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-            connection.setRequestMethod("GET");
-
-
-            connection.getInputStream();
-
-            String s = connection.getURL().toString();
-            connection.disconnect();
-
-            String[] ss = s.split("\\?");
-
-            return  ss[0];
-        }
-        catch (ProtocolException ex){
-            System.out.println(ex.toString());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return  null;
-
-    }
-
     @Override
     public void run() {
         while (ConnectionForm.isConnect()) {
             try {
                 printMatch();
             } catch (IOException e) {
-                url = LoadUrl();
+                Load.loadUrl();
             }
         }
     }
