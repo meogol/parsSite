@@ -1,0 +1,100 @@
+package form.core;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.util.HashMap;
+
+public class Load {
+    private static String url = "https://betwin52436.site/";
+    private static HashMap<String, String> menu = new HashMap<>();
+
+
+    /**
+     * Обновляет статический список с меню-видами спорта
+     * @throws IOException
+     */
+    public static void loadMenu() throws IOException {
+
+        Document doc = Jsoup.connect(url+"ru/live/").data("query", "Java")
+                .timeout(10000).userAgent("Mozilla").get();
+
+        Element sportMenu = doc.getElementsByClass("sport_menu").first();
+        Elements sportsItems = sportMenu.getElementsByClass("link");
+
+        for (Element sport:sportsItems) {
+            String href = sport.attr("href");
+
+            String name = sport.child(1).text();
+            menu.put(name,href);
+        }
+
+    }
+
+    public static void loadUrl()  {
+        try {
+            String url = "https://kbepha.top/s/15ns?s1=cbb&amp;p=%2Fuser%2Fregistration%2F&amp;fp=";
+
+            URL obj = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+            connection.setRequestMethod("GET");
+
+
+            connection.getInputStream();
+
+            String s = connection.getURL().toString();
+
+            connection.disconnect();
+
+            String[] ss = s.split("\\?");
+
+            Load.url = ss[0];
+
+        }
+        catch (ProtocolException ex){
+            System.out.println(ex.toString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * метод возвращает список турниров для выь=бранного вида спорта
+     * @param sport url(value) из HasMap menu
+     * @return HasMap с ключем-названи значением- url
+     * @throws IOException
+     */
+    public static HashMap<String,String> loadTournaments(String sport) throws IOException {
+        HashMap<String,String> tournaments = new HashMap<>();
+
+        Document doc = Jsoup.connect(url+"ru/live/"+sport).data("query", "Java")
+                .timeout(10000).userAgent("Mozilla").get();
+
+        Elements ligaMenu = doc.getElementsByClass("liga_menu").first().children();
+
+        for (Element tournament: ligaMenu) {
+            String hrefTournament = tournament.child(0).attr("href");
+            String nameTournament = tournament.child(0).text();
+
+            tournaments.put(nameTournament,hrefTournament);
+        }
+
+        return tournaments;
+    }
+
+    public static HashMap<String, String> getMenu() {
+        return menu;
+    }
+
+    public static String getUrl() {
+        return url;
+    }
+}
