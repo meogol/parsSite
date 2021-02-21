@@ -82,11 +82,8 @@ public class ConnectionForm extends JFrame {
         ConnectionForm dialog = new ConnectionForm();
         dialog.pack();
         dialog.setVisible(true);
-<<<<<<< Updated upstream
-=======
         System.exit(0);
         String[] items ={"Football","Tennis","Hockey"};
->>>>>>> Stashed changes
     }
 
 
