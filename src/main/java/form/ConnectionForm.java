@@ -52,7 +52,7 @@ public class ConnectionForm extends JDialog {
         connect = true;
         buttonStart.setEnabled(false);
 
-        exec.execute(new Connect());
+        exec.execute(new Connect(""));
     }
 
     private void onStop() {

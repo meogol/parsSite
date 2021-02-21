@@ -10,6 +10,13 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 
 public class Connect implements Runnable{
+    String connectUrl="/live/Table-Tennis/";
+
+    public Connect(){}
+    public Connect(String connectUrl){
+        this.connectUrl = connectUrl;
+    }
+
 
     /**
      * Вывод результатов сбора инфы с сайта в кнсоль
@@ -17,7 +24,7 @@ public class Connect implements Runnable{
      */
     public void printMatch() throws IOException {
 
-        Document doc = Jsoup.connect(Load.getUrl() +"ru/live/Table-Tennis/").data("query", "Java")
+        Document doc = Jsoup.connect(Load.getUrl() +"ru"+connectUrl).data("query", "Java")
                 .timeout(10000).userAgent("Mozilla").get();
 
 
