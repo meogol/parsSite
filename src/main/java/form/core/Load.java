@@ -22,6 +22,8 @@ public class Load {
      * @throws IOException
      */
     public HashMap<String, String> loadMenu() throws IOException {
+        loadUrl();
+
         HashMap<String, String> menu = new HashMap<>();
 
         Document doc = Jsoup.connect(url+"ru/live/").data("query", "Java")
@@ -79,6 +81,9 @@ public class Load {
      * @throws IOException
      */
     public static HashMap<String,String> loadTournaments(String sport) throws IOException {
+        loadUrl();
+
+
         HashMap<String,String> tournaments = new HashMap<>();
 
         Document doc = Jsoup.connect(url+"ru"+sport).data("query", "Java")
