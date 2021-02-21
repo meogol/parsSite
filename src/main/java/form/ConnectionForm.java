@@ -34,17 +34,17 @@ public class ConnectionForm extends JFrame {
             comboBoxSportSelect.addItem(field);
         }
 
-        buttonStart.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onStart();
-            }
-        });
-
-        buttonStop.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onStop();
-            }
-        });
+//        buttonStart.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                onStart();
+//            }
+//        });
+//
+//        buttonStop.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                onStop();
+//            }
+//        });
 
 
         comboBoxSportSelect.addActionListener(new ActionListener() {
@@ -80,14 +80,8 @@ public class ConnectionForm extends JFrame {
 
     public static void main(String[] args) throws IOException {
         ConnectionForm dialog = new ConnectionForm();
-        dialog.pack();
         dialog.setVisible(true);
-        System.exit(0);
-        String[] items ={"Football","Tennis","Hockey"};
+        dialog.pack();
     }
 
-
-    private void UIComponents() {
-        // TODO: place custom component creation code here
-    }
 }
