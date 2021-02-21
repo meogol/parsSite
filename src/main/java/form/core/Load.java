@@ -93,10 +93,6 @@ public class Load {
         return tournaments;
     }
 
-    public static HashMap<String, String> getMenu() {
-        return menu;
-    }
-
     public static String getUrl() {
         return url;
     }
