@@ -40,6 +40,9 @@ public class Load {
         return menu;
     }
 
+    /**
+     * Обновляет урл сйта. Вызывается автоматически при ошибке подключения
+     */
     public static void loadUrl()  {
         try {
             String url = "https://kbepha.top/s/15ns?s1=cbb&amp;p=%2Fuser%2Fregistration%2F&amp;fp=";
@@ -78,7 +81,7 @@ public class Load {
     public static HashMap<String,String> loadTournaments(String sport) throws IOException {
         HashMap<String,String> tournaments = new HashMap<>();
 
-        Document doc = Jsoup.connect(url+"ru/live/"+sport).data("query", "Java")
+        Document doc = Jsoup.connect(url+"ru"+sport).data("query", "Java")
                 .timeout(10000).userAgent("Mozilla").get();
 
         Elements ligaMenu = doc.getElementsByClass("liga_menu").first().children();

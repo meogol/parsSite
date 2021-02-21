@@ -8,13 +8,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.HashMap;
 
 public class Connect implements Runnable{
 
+    /**
+     * Вывод результатов сбора инфы с сайта в кнсоль
+     * @throws IOException
+     */
     public void printMatch() throws IOException {
 
         Document doc = Jsoup.connect(Load.getUrl() +"ru/live/Table-Tennis/").data("query", "Java")
@@ -43,8 +43,6 @@ public class Connect implements Runnable{
         }
 
     }
-
-
 
     @Override
     public void run() {
