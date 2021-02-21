@@ -13,14 +13,16 @@ import java.util.HashMap;
 
 public class Load {
     private static String url = "https://betwin52436.site/";
-    private static HashMap<String, String> menu = new HashMap<>();
 
 
     /**
-     * Обновляет статический список с меню-видами спорта
+     * Возвращает HashMap с меню видов спорта
+     * Ключ- название значение- ссылка
+     * @return
      * @throws IOException
      */
-    public static void loadMenu() throws IOException {
+    public HashMap<String, String> loadMenu() throws IOException {
+        HashMap<String, String> menu = new HashMap<>();
 
         Document doc = Jsoup.connect(url+"ru/live/").data("query", "Java")
                 .timeout(10000).userAgent("Mozilla").get();
@@ -35,6 +37,7 @@ public class Load {
             menu.put(name,href);
         }
 
+        return menu;
     }
 
     public static void loadUrl()  {
