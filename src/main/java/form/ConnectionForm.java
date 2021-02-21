@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ConnectionForm extends JDialog {
+public class ConnectionForm extends JFrame {
     private JPanel contentPane;
     private JButton buttonStart;
     private JButton buttonStop;
@@ -26,8 +26,8 @@ public class ConnectionForm extends JDialog {
 
     public ConnectionForm() throws IOException {
         setContentPane(contentPane);
-        setModal(true);
         getRootPane().setDefaultButton(buttonStart);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -65,7 +65,6 @@ public class ConnectionForm extends JDialog {
         ConnectionForm dialog = new ConnectionForm();
         dialog.pack();
         dialog.setVisible(true);
-        System.exit(0);
     }
 
 
