@@ -75,12 +75,12 @@ public class Load {
     }
 
     /**
-     * метод возвращает список турниров для выь=бранного вида спорта
+     * метод возвращает список турниров для выбранного вида спорта
      * @param sport url(value) из HasMap menu
      * @return HasMap с ключем-названи значением- url
      * @throws IOException
      */
-    public static HashMap<String,String> loadTournaments(String sport) throws IOException {
+    public HashMap<String,String> loadTournaments(String sport) throws IOException {
         loadUrl();
 
 
