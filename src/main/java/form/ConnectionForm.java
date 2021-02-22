@@ -4,8 +4,10 @@ import connect.Connect;
 import form.core.Load;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -16,9 +18,9 @@ public class ConnectionForm extends JFrame {
     private JButton buttonStop;
     private JCheckBox CheckBoxTT;
     private JCheckBox CheckBoxKap;
-    private JComboBox comboBoxSportSelect;
-    private JComboBox comboBoxMatchSelect;
-    private JComboBox comboBoxSelectTournament;
+    private JList<String> listSportSelect;
+    private JList<String> listMatchSelect;
+    private JButton sportSelectButton;
     private static boolean connect = true;
     ExecutorService exec = Executors.newCachedThreadPool();
 
@@ -29,10 +31,8 @@ public class ConnectionForm extends JFrame {
 
         Load connection = new Load();
         HashMap<String, String> mapMenu = connection.loadMenu();
-        for (String field:mapMenu.keySet()) {
 
-            comboBoxSportSelect.addItem(field);
-        }
+        listSportSelect.setListData(mapMenu.keySet().toArray(new String[0]));
 
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -46,17 +46,14 @@ public class ConnectionForm extends JFrame {
             }
         });
 
-
-        comboBoxSportSelect.addActionListener(new ActionListener() {
+        sportSelectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        comboBoxMatchSelect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
+                ArrayList<String> selectedSport = new ArrayList<String>();
+                for (String key:listSportSelect.getSelectedValuesList()) {
+                    selectedSport.add(key);
+                    HashMap<String, String> mapTour = connection.loadTournaments(key);
+                }
             }
         });
     }
@@ -78,10 +75,12 @@ public class ConnectionForm extends JFrame {
 
     }
 
+
     public static void main(String[] args) throws IOException {
         ConnectionForm dialog = new ConnectionForm();
         dialog.setVisible(true);
         dialog.pack();
+
     }
 
 }
