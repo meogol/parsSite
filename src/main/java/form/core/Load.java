@@ -21,7 +21,7 @@ public class Load {
      * @return
      * @throws IOException
      */
-    public HashMap<String, String> loadMenu() {
+    public HashMap<String, String> loadMenu() throws IOException {
         loadUrl();
 
         HashMap<String, String> menu = new HashMap<>();
@@ -37,14 +37,8 @@ public class Load {
             for (Element sport : sportsItems) {
                 String href = sport.attr("href");
 
-                String name = sport.child(1).text();
-                menu.put(name, href);
-            }
-
-            return menu;
-
-        } catch (IOException e) {
-            System.out.println(e.toString());
+            String name = sport.child(1).text();
+            menu.put(name,href);
         }
 
         return null;
@@ -88,31 +82,22 @@ public class Load {
      * @return HasMap с ключем-названи значением- url
      * @throws IOException
      */
-    public HashMap<String,String> loadTournaments(String sport) {
+    public HashMap<String,String> loadTournaments(String sport) throws IOException {
         loadUrl();
 
-        HashMap<String, String> tournaments = new HashMap<>();
 
-        Document doc = null;
+        HashMap<String,String> tournaments = new HashMap<>();
 
-        try {
-            doc = Jsoup.connect(url + "ru" + sport).data("query", "Java")
-                    .timeout(10000).userAgent("Mozilla").get();
+        Document doc = Jsoup.connect(url+"ru"+sport).data("query", "Java")
+                .timeout(10000).userAgent("Mozilla").get();
 
+        Elements ligaMenu = doc.getElementsByClass("liga_menu").first().children();
 
-            Elements ligaMenu = doc.getElementsByClass("liga_menu").first().children();
+        for (Element tournament: ligaMenu) {
+            String hrefTournament = tournament.child(0).attr("href");
+            String nameTournament = tournament.child(0).text();
 
-            for (Element tournament : ligaMenu) {
-                String hrefTournament = tournament.child(0).attr("href");
-                String nameTournament = tournament.child(0).text();
-
-                tournaments.put(nameTournament, hrefTournament);
-            }
-
-            return tournaments;
-
-        } catch (IOException e) {
-            System.out.println(e.toString());
+            tournaments.put(nameTournament,hrefTournament);
         }
 
         return null;
