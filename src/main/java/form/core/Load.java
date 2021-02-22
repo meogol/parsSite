@@ -22,6 +22,8 @@ public class Load {
      * @throws IOException
      */
     public HashMap<String, String> loadMenu() {
+        loadUrl();
+
         HashMap<String, String> menu = new HashMap<>();
 
         Document doc = null;
@@ -42,7 +44,7 @@ public class Load {
             return menu;
 
         } catch (IOException e) {
-            loadUrl();
+            System.out.println(e.toString());
         }
 
         return null;
@@ -87,6 +89,8 @@ public class Load {
      * @throws IOException
      */
     public HashMap<String,String> loadTournaments(String sport) {
+        loadUrl();
+
         HashMap<String, String> tournaments = new HashMap<>();
 
         Document doc = null;
@@ -108,7 +112,7 @@ public class Load {
             return tournaments;
 
         } catch (IOException e) {
-            loadUrl();
+            System.out.println(e.toString());
         }
 
         return null;
