@@ -1,16 +1,25 @@
 package connect;
 
-import form.ConnectionForm;
 import form.core.Load;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class Connect implements Runnable{
     String connectUrl="/live/Table-Tennis/";
+    HashMap<String, String> matches = new HashMap<>();
 
     public Connect(){}
     public Connect(String connectUrl){
@@ -19,16 +28,14 @@ public class Connect implements Runnable{
 
 
     /**
-     * Вывод результатов сбора инфы с сайта в кнсоль
+     * Создание хешмапа с инфой об активных матчах
      * @throws IOException
      */
-    public void printMatch() throws IOException {
+    public HashMap<String, String> getMatches() throws IOException {
+        HashMap<String, String> thisMatches = new HashMap<>();
 
         Document doc = Jsoup.connect(Load.getUrl() +"ru"+connectUrl).data("query", "Java")
                 .timeout(10000).userAgent("Mozilla").get();
-
-
-        //https://kbepha.top/15ns?s1=cbb&p=/user/registration/
 
         Elements newsHeadlines = doc.getElementsByClass("sports_widget");
 
@@ -37,28 +44,87 @@ public class Connect implements Runnable{
 
             for (int i = 0; i < news.size(); i++) {
                 if (i % 2 == 0) {
-                    Elements ne = news.get(i).getElementsByClass("n");
-                    System.out.println(ne.text());
+                    Elements sportsmenNames = news.get(i).getElementsByClass("n");
 
-                    Elements ne1 = news.get(i).getElementsByClass("c-events-scoreboard__cell");
-                    StringBuffer s = new StringBuffer(ne1.text());
-                    s.replace(s.length() / 2, s.length() / 2, "\n");
 
-                    System.out.println(s + "\n");
+                    Elements score = news.get(i).getElementsByClass("c-events-scoreboard__cell");
+                    String[] parsScore = {
+                            score.text().substring(0, score.text().length()/2),
+                            score.text().substring(score.text().length()/2),
+                    };
+
+                    System.out.println(sportsmenNames.text());
+                    for (String scoreItem: parsScore) {
+                        thisMatches.put(sportsmenNames.text(),scoreItem);
+                    }
+
                 }
             }
         }
 
+        return thisMatches;
     }
+
+    private void writeToExcel() throws IOException {
+        HashMap<String, String> thisMatches = getMatches();
+
+        for (String keyScore:matches.keySet()) {
+            if(!thisMatches.containsKey(keyScore)){
+
+            }
+
+        }
+    }
+
+    private static synchronized void writeToXLS(HashMap<String, String> newRow) throws IOException, URISyntaxException {
+        Path p = Paths.get("gdfg.xls");
+        String fileName = p.toString();
+
+        if (!Files.exists( p)) {
+            Files.createFile(p);
+            try (BufferedOutputStream fos = new BufferedOutputStream(new FileOutputStream(new File(fileName)))) {
+                Workbook workbook = new HSSFWorkbook();
+                workbook.createSheet("Ready");
+                workbook.write(fos);
+                workbook.close();
+            }
+        }
+
+        try (BufferedInputStream fis = new BufferedInputStream(new FileInputStream(new File(fileName)))) {
+
+            Workbook workbook = new HSSFWorkbook(fis);
+            Sheet sheet = workbook.getSheetAt(0);
+            int rowCount = sheet.getPhysicalNumberOfRows();
+            Row row = sheet.createRow(rowCount + 1);
+
+            int index=0;
+            for (String item:newRow.keySet()) {
+                Cell cell = row.createCell(index);
+                cell.setCellValue(newRow.get(item));
+                index++;
+            }
+
+//            for (int cellIndex = 0; cellIndex < newRow.size(); cellIndex++) {
+//                Cell cell = row.createCell(cellIndex);
+//                cell.setCellValue(newRow.get(cellIndex));
+//            }
+
+
+            try (BufferedOutputStream fio = new BufferedOutputStream(new FileOutputStream(fileName))) {
+                workbook.write(fio);
+            }
+        }
+    }
+
 
     @Override
     public void run() {
-        while (ConnectionForm.isConnect()) {
+       // while (ConnectionForm.isConnect()) {
             try {
-                printMatch();
-            } catch (IOException e) {
+                writeToXLS(getMatches());
+            } catch (IOException | URISyntaxException e) {
                 Load.loadUrl();
             }
-        }
+        //}
     }
 }

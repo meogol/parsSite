@@ -34,17 +34,17 @@ public class ConnectionForm extends JFrame {
             comboBoxSportSelect.addItem(field);
         }
 
-//        buttonStart.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                onStart();
-//            }
-//        });
-//
-//        buttonStop.addActionListener(new ActionListener() {
-//            public void actionPerformed(ActionEvent e) {
-//                onStop();
-//            }
-//        });
+        buttonStart.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                onStart();
+            }
+        });
+
+        buttonStop.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                onStop();
+            }
+        });
 
 
         comboBoxSportSelect.addActionListener(new ActionListener() {
@@ -69,7 +69,7 @@ public class ConnectionForm extends JFrame {
         connect = true;
         buttonStart.setEnabled(false);
 
-        exec.execute(new Connect(""));
+        exec.execute(new Connect());
     }
 
     private void onStop() {
