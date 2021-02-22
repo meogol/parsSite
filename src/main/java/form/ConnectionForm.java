@@ -1,16 +1,12 @@
 package form;
 
 import connect.Connect;
+import form.core.Load;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -20,6 +16,8 @@ public class ConnectionForm extends JFrame {
     private JButton buttonStop;
     private JCheckBox CheckBoxTT;
     private JCheckBox CheckBoxKap;
+    private JComboBox comboBoxSportSelect;
+    private JComboBox comboBoxMatchSelect;
     private JComboBox comboBoxSelectTournament;
     private static boolean connect = true;
     ExecutorService exec = Executors.newCachedThreadPool();
@@ -28,6 +26,13 @@ public class ConnectionForm extends JFrame {
         setContentPane(contentPane);
         getRootPane().setDefaultButton(buttonStart);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        Load connection = new Load();
+        HashMap<String, String> mapMenu = connection.loadMenu();
+        for (String field:mapMenu.keySet()) {
+
+            comboBoxSportSelect.addItem(field);
+        }
 
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -42,6 +47,18 @@ public class ConnectionForm extends JFrame {
         });
 
 
+        comboBoxSportSelect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        comboBoxMatchSelect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     public static boolean isConnect() {
@@ -52,7 +69,7 @@ public class ConnectionForm extends JFrame {
         connect = true;
         buttonStart.setEnabled(false);
 
-        exec.execute(new Connect(""));
+        exec.execute(new Connect());
     }
 
     private void onStop() {
@@ -63,12 +80,8 @@ public class ConnectionForm extends JFrame {
 
     public static void main(String[] args) throws IOException {
         ConnectionForm dialog = new ConnectionForm();
-        dialog.pack();
         dialog.setVisible(true);
+        dialog.pack();
     }
 
-
-    private void UIComponents() {
-        // TODO: place custom component creation code here
-    }
 }

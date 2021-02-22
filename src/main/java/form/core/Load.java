@@ -21,25 +21,31 @@ public class Load {
      * @return
      * @throws IOException
      */
-    public HashMap<String, String> loadMenu() throws IOException {
-        loadUrl();
-
+    public HashMap<String, String> loadMenu() {
         HashMap<String, String> menu = new HashMap<>();
 
-        Document doc = Jsoup.connect(url+"ru/live/").data("query", "Java")
-                .timeout(10000).userAgent("Mozilla").get();
+        Document doc = null;
+        try {
+            doc = Jsoup.connect(url + "ru/live/").data("query", "Java")
+                    .timeout(10000).userAgent("Mozilla").get();
 
-        Element sportMenu = doc.getElementsByClass("sport_menu").first();
-        Elements sportsItems = sportMenu.getElementsByClass("link");
+            Element sportMenu = doc.getElementsByClass("sport_menu").first();
+            Elements sportsItems = sportMenu.getElementsByClass("link");
 
-        for (Element sport:sportsItems) {
-            String href = sport.attr("href");
+            for (Element sport : sportsItems) {
+                String href = sport.attr("href");
 
-            String name = sport.child(1).text();
-            menu.put(name,href);
+                String name = sport.child(1).text();
+                menu.put(name, href);
+            }
+
+            return menu;
+
+        } catch (IOException e) {
+            loadUrl();
         }
 
-        return menu;
+        return null;
     }
 
     /**
@@ -75,30 +81,37 @@ public class Load {
     }
 
     /**
-     * метод возвращает список турниров для выь=бранного вида спорта
+     * метод возвращает список турниров для выбранного вида спорта
      * @param sport url(value) из HasMap menu
      * @return HasMap с ключем-названи значением- url
      * @throws IOException
      */
-    public static HashMap<String,String> loadTournaments(String sport) throws IOException {
-        loadUrl();
+    public HashMap<String,String> loadTournaments(String sport) {
+        HashMap<String, String> tournaments = new HashMap<>();
+
+        Document doc = null;
+
+        try {
+            doc = Jsoup.connect(url + "ru" + sport).data("query", "Java")
+                    .timeout(10000).userAgent("Mozilla").get();
 
 
-        HashMap<String,String> tournaments = new HashMap<>();
+            Elements ligaMenu = doc.getElementsByClass("liga_menu").first().children();
 
-        Document doc = Jsoup.connect(url+"ru"+sport).data("query", "Java")
-                .timeout(10000).userAgent("Mozilla").get();
+            for (Element tournament : ligaMenu) {
+                String hrefTournament = tournament.child(0).attr("href");
+                String nameTournament = tournament.child(0).text();
 
-        Elements ligaMenu = doc.getElementsByClass("liga_menu").first().children();
+                tournaments.put(nameTournament, hrefTournament);
+            }
 
-        for (Element tournament: ligaMenu) {
-            String hrefTournament = tournament.child(0).attr("href");
-            String nameTournament = tournament.child(0).text();
+            return tournaments;
 
-            tournaments.put(nameTournament,hrefTournament);
+        } catch (IOException e) {
+            loadUrl();
         }
 
-        return tournaments;
+        return null;
     }
 
     public static String getUrl() {
