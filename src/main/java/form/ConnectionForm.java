@@ -52,7 +52,7 @@ public class ConnectionForm extends JFrame {
                 ArrayList<String> selectedSport = new ArrayList<String>();
                 for (String key:listSportSelect.getSelectedValuesList()) {
                     selectedSport.add(key);
-                    HashMap<String, String> mapTour = connection.loadTournaments(key);
+                    HashMap<String, String> mapTour = connection.loadTournaments(mapMenu.get(key));
                 }
             }
         });

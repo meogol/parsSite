@@ -16,9 +16,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Connect implements Runnable{
     String connectUrl="/live/Table-Tennis/";
@@ -68,17 +66,6 @@ public class Connect implements Runnable{
         return thisMatches;
     }
 
-    private void writeToExcel() throws IOException {
-        HashMap<String, String> thisMatches = getMatches();
-
-        for (String keyScore:matches.keySet()) {
-            if(!thisMatches.containsKey(keyScore)){
-
-            }
-
-        }
-    }
-
     private static synchronized void writeToXLS(HashMap<String, String> newRow) throws IOException, URISyntaxException {
         Path p = Paths.get("gdfg.xls");
         String fileName = p.toString();
@@ -98,13 +85,17 @@ public class Connect implements Runnable{
             Workbook workbook = new HSSFWorkbook(fis);
             Sheet sheet = workbook.getSheetAt(0);
             int rowCount = sheet.getPhysicalNumberOfRows();
-            Row row = sheet.createRow(rowCount + 1);
 
-            int index=0;
-            for (String item:newRow.keySet()) {
-                Cell cell = row.createCell(index);
-                cell.setCellValue(newRow.get(item));
-                index++;
+            for (String key: newRow.keySet()) {
+
+                Row row = sheet.createRow(rowCount += 1);
+
+       //         key
+                int index = 0;
+                for (int cellIndex = 0; cellIndex < newRow.size(); cellIndex++) {
+                    Cell cell = row.createCell(cellIndex);
+                  //  cell.setCellValue();
+                }
             }
 
 //            for (int cellIndex = 0; cellIndex < newRow.size(); cellIndex++) {

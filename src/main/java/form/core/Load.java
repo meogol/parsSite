@@ -96,15 +96,15 @@ public class Load {
         Document doc = null;
 
         try {
-            doc = Jsoup.connect(url + "ru" + sport).data("query", "Java")
+            doc = Jsoup.connect(url + "ru/" + sport).data("query", "Java")
                     .timeout(10000).userAgent("Mozilla").get();
 
 
-            Elements ligaMenu = doc.getElementsByClass("liga_menu").first().children();
+            Elements ligaMenu = doc.getElementsByClass("imp");
 
             for (Element tournament : ligaMenu) {
-                String hrefTournament = tournament.child(0).attr("href");
-                String nameTournament = tournament.child(0).text();
+                String hrefTournament = tournament.attr("href");
+                String nameTournament = tournament.text();
 
                 tournaments.put(nameTournament, hrefTournament);
             }
