@@ -102,8 +102,8 @@ public class Connect implements Runnable{
             int rowCount = sheet.getPhysicalNumberOfRows();
 
             for (String key: newRow.keySet()) {
-
-                Row row = sheet.createRow(rowCount += 2);
+                Row row = sheet.createRow(rowCount);
+                row = sheet.createRow(++rowCount);
 
                 String score = newRow.get(key);
 
@@ -123,7 +123,14 @@ public class Connect implements Runnable{
                     cell.setCellValue(parsScore[i]);
                 }
 
-                row = sheet.createRow(rowCount += 1);
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
+                Date date = calendar.getTime();
+
+                Cell cell = row.createCell(7);
+                cell.setCellValue(date.toString());
+
+
+                row = sheet.createRow(++rowCount);
 
 
                 Cell cellNameTwo = row.createCell(0);
@@ -132,18 +139,12 @@ public class Connect implements Runnable{
                 sheet.autoSizeColumn(0);
 
                 for (int cellIndex = 1, i=parsScore.length/2; i < parsScore.length; cellIndex++, i++) {
-                    Cell cell = row.createCell(cellIndex);
-                    cell.setCellValue(parsScore[i]);
+                    Cell newCell = row.createCell(cellIndex);
+                    newCell.setCellValue(parsScore[i]);
 
                     sheet.autoSizeColumn(cellIndex);
 
                 }
-
-                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
-                Date date = calendar.getTime();
-
-                Cell cell = row.createCell(7);
-                cell.setCellValue(date.toString());
 
                 sheet.autoSizeColumn(7);
             }
