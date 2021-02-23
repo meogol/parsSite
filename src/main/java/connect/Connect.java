@@ -37,10 +37,8 @@ public class Connect implements Runnable{
         }
     }
 
-    public Connect(String fullUrl, String treadKey)  {
+    public Connect(String fullUrl)  {
         Load.loadUrl();
-        this.treadKey = treadKey;
-
         this.connectUrl = fullUrl;
 
         try {
@@ -196,6 +194,7 @@ public class Connect implements Runnable{
             }
         }
     }
+
     public void testLoad(){
         while (ConnectionForm.isConnect()) {
             try {
