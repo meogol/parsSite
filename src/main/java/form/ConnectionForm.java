@@ -24,7 +24,7 @@ public class ConnectionForm extends JFrame {
     private static boolean connect = true;
     ExecutorService exec = Executors.newCachedThreadPool();
 
-    public ConnectionForm() throws IOException {
+    public ConnectionForm(){
         setContentPane(contentPane);
         getRootPane().setDefaultButton(buttonStart);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,6 +60,10 @@ public class ConnectionForm extends JFrame {
 
     public static boolean isConnect() {
         return connect;
+    }
+
+    public static void setConnect(boolean connect) {
+        ConnectionForm.connect = connect;
     }
 
     private void onStart() {
