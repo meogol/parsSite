@@ -26,7 +26,7 @@ import java.util.TimeZone;
 public class Connect implements Runnable{
     String connectUrl="/live/Table-Tennis/1197285-TT-Cup/";
     HashMap<String, String> matches;
-
+    String treadKey = "";
 
     public Connect(){
         Load.loadUrl();
@@ -37,9 +37,11 @@ public class Connect implements Runnable{
         }
     }
 
-    public Connect(String connectUrl)  {
+    public Connect(String fullUrl, String treadKey)  {
         Load.loadUrl();
-        this.connectUrl = connectUrl;
+        this.treadKey = treadKey;
+
+        this.connectUrl = fullUrl;
 
         try {
             matches  =  getMatches();
@@ -158,6 +160,7 @@ public class Connect implements Runnable{
     public void checkMatches() throws URISyntaxException, IOException {
         HashMap<String, String> thisMatches = getMatches();
         HashMap<String, String> writeMatches = new HashMap<>();
+
         for (String key :matches.keySet()) {
             if (!thisMatches.containsKey(key)){
                 writeMatches.put(key, matches.get(key));
