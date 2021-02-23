@@ -21,7 +21,8 @@ public class ConnectionForm extends JFrame {
     private JButton sportSelectButton;
     private JList list1;
     private static boolean connect = true;
-    ExecutorService exec = Executors.newCachedThreadPool();
+    private ExecutorService exec = Executors.newCachedThreadPool();
+    private static HashMap<String, Boolean> activeTread = new HashMap<String, Boolean>();
 
     public ConnectionForm(){
         setContentPane(contentPane);
@@ -69,6 +70,10 @@ public class ConnectionForm extends JFrame {
 
     public static void setConnect(boolean connect) {
         ConnectionForm.connect = connect;
+    }
+
+    public static HashMap<String, Boolean> getActiveTread() {
+        return activeTread;
     }
 
     private void onStart() {
