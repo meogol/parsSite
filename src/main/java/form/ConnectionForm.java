@@ -16,11 +16,10 @@ public class ConnectionForm extends JFrame {
     private JPanel contentPane;
     private JButton buttonStart;
     private JButton buttonStop;
-    private JCheckBox CheckBoxTT;
-    private JCheckBox CheckBoxKap;
     private JList<String> listSportSelect;
     private JList<String> listMatchSelect;
     private JButton sportSelectButton;
+    private JList list1;
     private static boolean connect = true;
     ExecutorService exec = Executors.newCachedThreadPool();
 
@@ -50,10 +49,16 @@ public class ConnectionForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ArrayList<String> selectedSport = new ArrayList<String>();
+                ArrayList<String> selectedMatches = new ArrayList<String>();
                 for (String key:listSportSelect.getSelectedValuesList()) {
                     selectedSport.add(key);
                     HashMap<String, String> mapTour = connection.loadTournaments(mapMenu.get(key));
+                    for (String keyTwo:mapTour.keySet()){
+                        selectedMatches.add(keyTwo);
+                    }
                 }
+                listMatchSelect.setListData(selectedMatches.toArray(new String[0]));
+
             }
         });
     }
