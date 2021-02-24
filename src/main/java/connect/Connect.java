@@ -17,7 +17,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,7 +25,7 @@ import java.util.TimeZone;
 public class Connect implements Runnable{
     String connectUrl="/live/Table-Tennis/1197285-TT-Cup/";
     HashMap<String, String> matches;
-    String treadKey = "";
+    Boolean isAllWrits = true;
 
     public Connect(){
         Load.loadUrl();
@@ -58,7 +57,7 @@ public class Connect implements Runnable{
 
         HashMap<String, String> thisMatches = new HashMap<>();
 
-        Document doc = Jsoup.connect(Load.getUrl() +"ru"+connectUrl).data("query", "Java")
+        Document doc = Jsoup.connect(Load.getUrl() +"ru/"+connectUrl).data("query", "Java")
                 .timeout(10000).userAgent("Mozilla").get();
 
         Elements newsHeadlines = doc.getElementsByClass("sports_widget");
@@ -82,7 +81,8 @@ public class Connect implements Runnable{
     }
 
     public void writeToXLS(HashMap<String, String> newRow) throws IOException {
-        Path p = Paths.get("gdfg.xls");
+
+        Path p = Paths.get(connectUrl.split("/")[2].split("-",2)[1]+".xls");
         String fileName = p.toString();
 
         if (!Files.exists( p)) {
@@ -102,8 +102,8 @@ public class Connect implements Runnable{
             int rowCount = sheet.getPhysicalNumberOfRows();
 
             for (String key: newRow.keySet()) {
-                Row row = sheet.createRow(rowCount);
-                row = sheet.createRow(++rowCount);
+                Row row = sheet.createRow(rowCount+=1);
+                row = sheet.createRow(rowCount+=1);
 
                 String score = newRow.get(key);
 
@@ -130,7 +130,7 @@ public class Connect implements Runnable{
                 cell.setCellValue(date.toString());
 
 
-                row = sheet.createRow(++rowCount);
+                row = sheet.createRow(rowCount+=1);
 
 
                 Cell cellNameTwo = row.createCell(0);
@@ -183,9 +183,10 @@ public class Connect implements Runnable{
 
     @Override
     public void run() {
-        while (ConnectionForm.isConnect()) {
+        while ((ConnectionForm.getActiveTread().get(connectUrl)) || !isAllWrits) {
             try {
                 checkMatches();
+
             } catch (IOException ex) {
                 Load.loadUrl();
             }
@@ -196,7 +197,7 @@ public class Connect implements Runnable{
     }
 
     public void testLoad(){
-        while (ConnectionForm.isConnect()) {
+        while (ConnectionForm.isConnect() || !isAllWrits) {
             try {
                 checkMatches();
             } catch (IOException ex) {
