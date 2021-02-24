@@ -19,7 +19,7 @@ public class ConnectionForm extends JFrame {
     private JList<String> listSportSelect;
     private JList<String> listMatchSelect;
     private JButton sportSelectButton;
-    private JList list1;
+    private JList listActiveMatches;
     private static boolean connect = true;
     private ExecutorService exec = Executors.newCachedThreadPool();
     private static HashMap<String, Boolean> activeTread = new HashMap<String, Boolean>();
@@ -37,6 +37,11 @@ public class ConnectionForm extends JFrame {
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onStart();
+                ArrayList<String> selectedSport = new ArrayList<String>();
+                ArrayList<String> selectedMatch = new ArrayList<String>();
+                for (String key:) {
+
+                }
             }
         });
 
@@ -60,6 +65,7 @@ public class ConnectionForm extends JFrame {
                 }
                 listMatchSelect.setListData(selectedMatches.toArray(new String[0]));
 
+
             }
         });
     }
@@ -79,7 +85,6 @@ public class ConnectionForm extends JFrame {
     private void onStart() {
         connect = true;
         buttonStart.setEnabled(false);
-
         exec.execute(new Connect());
     }
 
