@@ -176,7 +176,7 @@ public class Connect implements Runnable{
         }catch (IOException ex)
         {
             matches = thisMatches;
-
+            isAllWrits = false;
             for (String key: writeMatches.keySet()) {
                 matches.put(key, writeMatches.get(key));
             }
