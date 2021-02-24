@@ -86,11 +86,14 @@ public class ConnectionForm extends JFrame {
 
     private void onStart(Load connection) {
         connect = true;
+        ArrayList<String> listOfActives = new ArrayList<String>();
 
         for (String keySport:listSportSelect.getSelectedValuesList()) {
             HashMap<String, String> mapTourMat = connection.loadTournaments(mapMenu.get(keySport));
             for (String keyMatch:listMatchSelect.getSelectedValuesList()) {
                 activeTread.put(keyMatch, true);
+                listOfActives.add(keyMatch);
+                listActiveMatches.setListData(listOfActives.toArray(new String[0]));
                 exec.execute(new Connect(mapTourMat.get(keyMatch), keyMatch));
             }
         }
