@@ -25,6 +25,7 @@ public class ConnectionForm extends JFrame {
     private ExecutorService exec = Executors.newCachedThreadPool();
     private static HashMap<String, Boolean> activeTread = new HashMap<String, Boolean>();
     private HashMap<String, String> mapMenu;
+    ArrayList<String> listOfActives = new ArrayList<String>();
 
     public ConnectionForm(){
         setContentPane(contentPane);
@@ -37,7 +38,6 @@ public class ConnectionForm extends JFrame {
 
         ArrayList<String> selectedSport = new ArrayList<String>();
         ArrayList<String> selectedMatches = new ArrayList<String>();
-
 
 
 
@@ -86,26 +86,28 @@ public class ConnectionForm extends JFrame {
 
     private void onStart(Load connection) {
         connect = true;
-        ArrayList<String> listOfActives = new ArrayList<String>();
-
         for (String keySport:listSportSelect.getSelectedValuesList()) {
             HashMap<String, String> mapTourMat = connection.loadTournaments(mapMenu.get(keySport));
             for (String keyMatch:listMatchSelect.getSelectedValuesList()) {
                 activeTread.put(keyMatch, true);
                 listOfActives.add(keyMatch);
-                listActiveMatches.setListData(listOfActives.toArray(new String[0]));
                 exec.execute(new Connect(mapTourMat.get(keyMatch), keyMatch));
             }
         }
+        listActiveMatches.setListData(listOfActives.toArray(new String[0]));
+
 
 
     }
 
     private void onStop() {
+        int index = 0;
         for (Object keySport:listActiveMatches.getSelectedValuesList()){
             activeTread.put((String) keySport, false);
+            index = listActiveMatches.getSelectedIndex();
+            listOfActives.remove(index);
         }
-
+        listActiveMatches.setListData(listOfActives.toArray(new String[0]));
     }
 
 
