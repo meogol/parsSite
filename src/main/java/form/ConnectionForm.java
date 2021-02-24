@@ -47,8 +47,8 @@ public class ConnectionForm extends JFrame {
                 onStart(connection);
 
             }
-        });
 
+        });
         buttonStop.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onStop();
@@ -67,9 +67,9 @@ public class ConnectionForm extends JFrame {
                 }
                 listMatchSelect.setListData(selectedMatches.toArray(new String[0]));
 
-
             }
         });
+        
     }
 
     public static boolean isConnect() {
@@ -94,6 +94,7 @@ public class ConnectionForm extends JFrame {
                 exec.execute(new Connect(mapTourMat.get(keyMatch), keyMatch));
             }
         }
+
 
     }
 
