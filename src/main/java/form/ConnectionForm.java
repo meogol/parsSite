@@ -20,6 +20,7 @@ public class ConnectionForm extends JFrame {
     private JList<String> listMatchSelect;
     private JButton sportSelectButton;
     private JList listActiveMatches;
+    private JPanel ContentPanel;
     private static boolean connect = true;
     private ExecutorService exec = Executors.newCachedThreadPool();
     private static HashMap<String, Boolean> activeTread = new HashMap<String, Boolean>();
