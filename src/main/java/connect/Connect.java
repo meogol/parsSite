@@ -172,6 +172,7 @@ public class Connect implements Runnable{
                 writeToXLS(writeMatches);
             }
             matches = thisMatches;
+            isAllWrits = true;
 
         }catch (IOException ex)
         {

@@ -102,8 +102,9 @@ public class ConnectionForm extends JFrame {
     }
 
     private void onStop() {
-        connect = false;
-        buttonStart.setEnabled(true);
+        for (Object keySport:listActiveMatches.getSelectedValuesList()){
+            activeTread.put((String) keySport, false);
+        }
 
     }
 
