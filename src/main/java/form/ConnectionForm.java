@@ -24,6 +24,7 @@ public class ConnectionForm extends JFrame {
     private static boolean connect = true;
     private ExecutorService exec = Executors.newCachedThreadPool();
     private static HashMap<String, Boolean> activeTread = new HashMap<String, Boolean>();
+    private HashMap<String, String> mapMenu;
 
     public ConnectionForm(){
         setContentPane(contentPane);
@@ -31,7 +32,7 @@ public class ConnectionForm extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         Load connection = new Load();
-        HashMap<String, String> mapMenu = connection.loadMenu();
+        mapMenu = connection.loadMenu();
         listSportSelect.setListData(mapMenu.keySet().toArray(new String[0]));
 
         ArrayList<String> selectedSport = new ArrayList<String>();
@@ -43,14 +44,7 @@ public class ConnectionForm extends JFrame {
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                for (String keySport:listSportSelect.getSelectedValuesList()) {
-                    HashMap<String, String> mapTourMat = connection.loadTournaments(mapMenu.get(keySport));
-                    for (String keyMatch:listMatchSelect.getSelectedValuesList()) {
-                        activeTread.put(mapTourMat.get(keyMatch), true);
-                    }
-                }
-
-                onStart();
+                onStart(connection);
 
             }
         });
@@ -90,12 +84,17 @@ public class ConnectionForm extends JFrame {
         return activeTread;
     }
 
-    private void onStart() {
+    private void onStart(Load connection) {
         connect = true;
 
-        for (String key:activeTread.keySet()) {
-            exec.execute(new Connect(key));
+        for (String keySport:listSportSelect.getSelectedValuesList()) {
+            HashMap<String, String> mapTourMat = connection.loadTournaments(mapMenu.get(keySport));
+            for (String keyMatch:listMatchSelect.getSelectedValuesList()) {
+                activeTread.put(keyMatch, true);
+                exec.execute(new Connect(mapTourMat.get(keyMatch), keyMatch));
+            }
         }
+
     }
 
     private void onStop() {

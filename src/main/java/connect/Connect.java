@@ -24,6 +24,7 @@ import java.util.TimeZone;
 
 public class Connect implements Runnable{
     String connectUrl="/live/Table-Tennis/1197285-TT-Cup/";
+    String hashKey="";
     HashMap<String, String> matches;
     Boolean isAllWrits = true;
 
@@ -36,9 +37,10 @@ public class Connect implements Runnable{
         }
     }
 
-    public Connect(String fullUrl)  {
+    public Connect(String fullUrl, String hashKey)  {
         Load.loadUrl();
         this.connectUrl = fullUrl;
+        this.hashKey = hashKey;
 
         try {
             matches  =  getMatches();
@@ -183,7 +185,7 @@ public class Connect implements Runnable{
 
     @Override
     public void run() {
-        while ((ConnectionForm.getActiveTread().get(connectUrl)) || !isAllWrits) {
+        while ((ConnectionForm.getActiveTread().get(hashKey)) || !isAllWrits) {
             try {
                 checkMatches();
 
