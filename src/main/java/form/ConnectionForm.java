@@ -19,7 +19,7 @@ public class ConnectionForm extends JFrame {
     private JList<String> listSportSelect;
     private JList<String> listMatchSelect;
     private JButton sportSelectButton;
-    private JList list1;
+    private JList listActiveMatches;
     private static boolean connect = true;
     private ExecutorService exec = Executors.newCachedThreadPool();
     private static HashMap<String, Boolean> activeTread = new HashMap<String, Boolean>();
@@ -31,12 +31,26 @@ public class ConnectionForm extends JFrame {
 
         Load connection = new Load();
         HashMap<String, String> mapMenu = connection.loadMenu();
-
         listSportSelect.setListData(mapMenu.keySet().toArray(new String[0]));
+
+
+        ArrayList<String> selectedSport = new ArrayList<String>();
+        ArrayList<String> selectedMatches = new ArrayList<String>();
+
+
+        ArrayList<String> sportAndMatchFromHashValues = new ArrayList<String>();
+
 
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onStart();
+
+                for (String keySport:listSportSelect.getSelectedValuesList()) {
+                    HashMap<String, String> mapTourMat = connection.loadTournaments(mapMenu.get(keySport));
+                    for (String keyMatch:listMatchSelect.getSelectedValuesList()) {
+                        sportAndMatchFromHashValues.add(mapTourMat.get(keyMatch));
+                    }
+                }
             }
         });
 
@@ -49,8 +63,6 @@ public class ConnectionForm extends JFrame {
         sportSelectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<String> selectedSport = new ArrayList<String>();
-                ArrayList<String> selectedMatches = new ArrayList<String>();
                 for (String key:listSportSelect.getSelectedValuesList()) {
                     selectedSport.add(key);
                     HashMap<String, String> mapTour = connection.loadTournaments(mapMenu.get(key));
@@ -59,6 +71,7 @@ public class ConnectionForm extends JFrame {
                     }
                 }
                 listMatchSelect.setListData(selectedMatches.toArray(new String[0]));
+
 
             }
         });
@@ -79,7 +92,6 @@ public class ConnectionForm extends JFrame {
     private void onStart() {
         connect = true;
         buttonStart.setEnabled(false);
-
         exec.execute(new Connect());
     }
 
