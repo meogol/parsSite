@@ -92,7 +92,7 @@ public class Load {
         loadUrl();
 
         HashMap<String, String> tournaments = new HashMap<>();
-
+            
         Document doc = null;
 
         try {

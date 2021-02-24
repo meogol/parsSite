@@ -34,24 +34,24 @@ public class ConnectionForm extends JFrame {
         HashMap<String, String> mapMenu = connection.loadMenu();
         listSportSelect.setListData(mapMenu.keySet().toArray(new String[0]));
 
-
         ArrayList<String> selectedSport = new ArrayList<String>();
         ArrayList<String> selectedMatches = new ArrayList<String>();
 
 
-        ArrayList<String> sportAndMatchFromHashValues = new ArrayList<String>();
 
 
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onStart();
 
                 for (String keySport:listSportSelect.getSelectedValuesList()) {
                     HashMap<String, String> mapTourMat = connection.loadTournaments(mapMenu.get(keySport));
                     for (String keyMatch:listMatchSelect.getSelectedValuesList()) {
-                        sportAndMatchFromHashValues.add(mapTourMat.get(keyMatch));
+                        activeTread.put(mapTourMat.get(keyMatch), true);
                     }
                 }
+
+                onStart();
+
             }
         });
 
@@ -92,8 +92,10 @@ public class ConnectionForm extends JFrame {
 
     private void onStart() {
         connect = true;
-        buttonStart.setEnabled(false);
-        exec.execute(new Connect());
+
+        for (String key:activeTread.keySet()) {
+            exec.execute(new Connect(key));
+        }
     }
 
     private void onStop() {
