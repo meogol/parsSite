@@ -25,22 +25,24 @@ import java.util.TimeZone;
 public class Connect implements Runnable{
     String connectUrl="/live/Table-Tennis/1197285-TT-Cup/";
     String hashKey="";
+    String sportKey = "";
     HashMap<String, String> matches;
     Boolean isAllWrits = true;
 
     public Connect(){
         Load.loadUrl();
         try {
-            matches  =  getMatches();
+            matches  = getMatches();
         } catch (IOException e) {
             Load.loadUrl();
         }
     }
 
-    public Connect(String fullUrl, String hashKey)  {
+    public Connect(String fullUrl, String hashKey, String sportKey)  {
         Load.loadUrl();
         this.connectUrl = fullUrl;
         this.hashKey = hashKey;
+        this.sportKey = sportKey;
 
         try {
             matches  =  getMatches();
@@ -60,7 +62,10 @@ public class Connect implements Runnable{
         HashMap<String, String> thisMatches = new HashMap<>();
 
         Document doc = Jsoup.connect(Load.getUrl() +"ru/"+connectUrl).data("query", "Java")
-                .timeout(10000).userAgent("Mozilla").get();
+                .userAgent("Mozilla").get();
+
+        Elements ligaMenu = doc.getElementsByClass("imp");
+
 
         Elements newsHeadlines = doc.getElementsByClass("sports_widget");
 
@@ -69,6 +74,13 @@ public class Connect implements Runnable{
 
             for (int i = 0; i < news.size(); i++) {
                 if (i % 2 == 0) {
+                    String matchStr = news.get(i).getElementsByClass("c-events__name")
+                            .first().attr("href");
+
+                    if(!matchStr.contains(connectUrl)){
+                        continue;
+                    }
+
                     Elements sportsmenNames = news.get(i).getElementsByClass("n");
 
                     Elements score = news.get(i).getElementsByClass("c-events-scoreboard__cell");
@@ -157,8 +169,16 @@ public class Connect implements Runnable{
         }
     }
 
-    public void checkMatches() throws URISyntaxException, IOException {
-        HashMap<String, String> thisMatches = getMatches();
+    public void checkMatches() throws URISyntaxException {
+        HashMap<String, String> thisMatches = null;
+        try {
+            thisMatches = getMatches();
+        } catch (IOException e) {
+            Load.loadUrl();
+            e.printStackTrace();
+            return;
+        }
+
         HashMap<String, String> writeMatches = new HashMap<>();
 
         for (String key :matches.keySet()) {
@@ -189,12 +209,9 @@ public class Connect implements Runnable{
         while ((ConnectionForm.getActiveTread().get(hashKey)) || !isAllWrits) {
             try {
                 checkMatches();
-
-            } catch (IOException ex) {
-                Load.loadUrl();
             }
             catch ( URISyntaxException e){
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
     }
@@ -203,13 +220,12 @@ public class Connect implements Runnable{
         while (ConnectionForm.isConnect() || !isAllWrits) {
             try {
                 checkMatches();
-            } catch (IOException ex) {
-                Load.loadUrl();
-            }
-            catch ( URISyntaxException e){
-                System.out.println(e);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
             }
         }
     }
+
+
 
 }

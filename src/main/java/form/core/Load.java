@@ -29,7 +29,7 @@ public class Load {
         Document doc = null;
         try {
             doc = Jsoup.connect(url + "ru/live/").data("query", "Java")
-                    .timeout(10000).userAgent("Mozilla").get();
+                    .userAgent("Mozilla").get();
 
             Element sportMenu = doc.getElementsByClass("sport_menu").first();
             Elements sportsItems = sportMenu.getElementsByClass("link");
@@ -74,7 +74,7 @@ public class Load {
 
         }
         catch (ProtocolException ex){
-            System.out.println(ex.toString());
+            ex.printStackTrace();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,7 +97,7 @@ public class Load {
 
         try {
             doc = Jsoup.connect(url + "ru/" + sport).data("query", "Java")
-                    .timeout(10000).userAgent("Mozilla").get();
+                    .userAgent("Mozilla").get();
 
 
             Elements ligaMenu = doc.getElementsByClass("imp");
@@ -112,7 +112,7 @@ public class Load {
             return tournaments;
 
         } catch (IOException e) {
-            System.out.println(e.toString());
+            e.printStackTrace();
         }
 
         return null;
