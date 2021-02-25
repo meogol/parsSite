@@ -28,7 +28,9 @@ public class ConnectionForm extends JFrame {
     private HashMap<String, String> mapMenu;
     ArrayList<String> listOfActives = new ArrayList<String>();
 
-    public ConnectionForm(){
+    public ConnectionForm(String title){
+        super(title);
+
         setContentPane(contentPane);
         getRootPane().setDefaultButton(buttonStart);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,6 +39,8 @@ public class ConnectionForm extends JFrame {
         mapMenu = connection.loadMenu();
         listSportSelect.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listSportSelect.setListData(mapMenu.keySet().toArray(new String[0]));
+        this.setTitle("HUMBot");
+
 
         ArrayList<String> selectedSport = new ArrayList<String>();
         ArrayList<String> selectedMatches = new ArrayList<String>();
@@ -137,7 +141,7 @@ public class ConnectionForm extends JFrame {
 
 
     public static void main(String[] args) throws IOException {
-        ConnectionForm dialog = new ConnectionForm();
+        ConnectionForm dialog = new ConnectionForm("HUMBot");
         dialog.setVisible(true);
         dialog.pack();
 
