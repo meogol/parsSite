@@ -64,6 +64,7 @@ public class ConnectionForm extends JFrame {
                 Runnable run = ()->{
                     progressBar.setIndeterminate(true);
                     sportSelectButton.setEnabled(false);
+                    buttonStart.setEnabled(false);
 
                     for (String key:listSportSelect.getSelectedValuesList()) {
                         selectedSport.add(key);
@@ -75,6 +76,7 @@ public class ConnectionForm extends JFrame {
                     listMatchSelect.setListData(selectedMatches.toArray(new String[0]));
 
                     sportSelectButton.setEnabled(true);
+                    buttonStart.setEnabled(true);
                     progressBar.setIndeterminate(false);
 
                 };
@@ -102,6 +104,8 @@ public class ConnectionForm extends JFrame {
         Runnable run = () -> {
             progressBar.setIndeterminate(true);
             buttonStart.setEnabled(false);
+            sportSelectButton.setEnabled(false);
+
             for (String keySport : listSportSelect.getSelectedValuesList()) {
                 HashMap<String, String> mapTourMat = connection.loadTournaments(mapMenu.get(keySport));
                 for (String keyMatch : listMatchSelect.getSelectedValuesList()) {
@@ -113,8 +117,8 @@ public class ConnectionForm extends JFrame {
             listActiveMatches.setListData(listOfActives.toArray(new String[0]));
 
             buttonStart.setEnabled(true);
+            sportSelectButton.setEnabled(true);
             progressBar.setIndeterminate(false);
-
         };
 
         exec.execute(run);
