@@ -60,14 +60,23 @@ public class ConnectionForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectedMatches.clear();
-                for (String key:listSportSelect.getSelectedValuesList()) {
-                    selectedSport.add(key);
-                    HashMap<String, String> mapTour = connection.loadTournaments(mapMenu.get(key));
-                    for (String keyTwo:mapTour.keySet()){
-                        selectedMatches.add(keyTwo);
+                Runnable run = ()->{
+                    sportSelectButton.setEnabled(false);
+
+                    for (String key:listSportSelect.getSelectedValuesList()) {
+                        selectedSport.add(key);
+                        HashMap<String, String> mapTour = connection.loadTournaments(mapMenu.get(key));
+                        for (String keyTwo:mapTour.keySet()){
+                            selectedMatches.add(keyTwo);
+                        }
                     }
-                }
-                listMatchSelect.setListData(selectedMatches.toArray(new String[0]));
+                    listMatchSelect.setListData(selectedMatches.toArray(new String[0]));
+
+                    sportSelectButton.setEnabled(true);
+
+                };
+
+                exec.execute(run);
 
             }
         });
@@ -87,18 +96,23 @@ public class ConnectionForm extends JFrame {
     }
 
     private void onStart(Load connection) {
-        connect = true;
-        for (String keySport:listSportSelect.getSelectedValuesList()) {
-            HashMap<String, String> mapTourMat = connection.loadTournaments(mapMenu.get(keySport));
-            for (String keyMatch:listMatchSelect.getSelectedValuesList()) {
-                activeTread.put(keyMatch, true);
-                listOfActives.add(keyMatch);
-                exec.execute(new Connect(mapTourMat.get(keyMatch), keyMatch));
+        Runnable run = () -> {
+            buttonStart.setEnabled(false);
+            for (String keySport : listSportSelect.getSelectedValuesList()) {
+                HashMap<String, String> mapTourMat = connection.loadTournaments(mapMenu.get(keySport));
+                for (String keyMatch : listMatchSelect.getSelectedValuesList()) {
+                    activeTread.put(keyMatch, true);
+                    listOfActives.add(keyMatch);
+                    exec.execute(new Connect(mapTourMat.get(keyMatch), keyMatch, mapMenu.get(keySport)));
+                }
             }
-        }
-        listActiveMatches.setListData(listOfActives.toArray(new String[0]));
+            listActiveMatches.setListData(listOfActives.toArray(new String[0]));
 
+            buttonStart.setEnabled(true);
 
+        };
+
+        exec.execute(run);
 
     }
 
@@ -120,4 +134,7 @@ public class ConnectionForm extends JFrame {
 
     }
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+    }
 }
