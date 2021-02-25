@@ -31,9 +31,10 @@ public class ConnectionForm extends JFrame {
         setContentPane(contentPane);
         getRootPane().setDefaultButton(buttonStart);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        final int SINGLE_SELECTION;
         Load connection = new Load();
         mapMenu = connection.loadMenu();
+        listSportSelect.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listSportSelect.setListData(mapMenu.keySet().toArray(new String[0]));
 
         ArrayList<String> selectedSport = new ArrayList<String>();
@@ -58,6 +59,7 @@ public class ConnectionForm extends JFrame {
         sportSelectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                selectedMatches.clear();
                 for (String key:listSportSelect.getSelectedValuesList()) {
                     selectedSport.add(key);
                     HashMap<String, String> mapTour = connection.loadTournaments(mapMenu.get(key));
