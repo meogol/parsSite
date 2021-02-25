@@ -21,6 +21,7 @@ public class ConnectionForm extends JFrame {
     private JButton sportSelectButton;
     private JList listActiveMatches;
     private JPanel ContentPanel;
+    private JProgressBar progressBar;
     private static boolean connect = true;
     private ExecutorService exec = Executors.newCachedThreadPool();
     private static HashMap<String, Boolean> activeTread = new HashMap<String, Boolean>();
@@ -61,6 +62,7 @@ public class ConnectionForm extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 selectedMatches.clear();
                 Runnable run = ()->{
+                    progressBar.setIndeterminate(true);
                     sportSelectButton.setEnabled(false);
 
                     for (String key:listSportSelect.getSelectedValuesList()) {
@@ -73,6 +75,7 @@ public class ConnectionForm extends JFrame {
                     listMatchSelect.setListData(selectedMatches.toArray(new String[0]));
 
                     sportSelectButton.setEnabled(true);
+                    progressBar.setIndeterminate(false);
 
                 };
 
@@ -97,6 +100,7 @@ public class ConnectionForm extends JFrame {
 
     private void onStart(Load connection) {
         Runnable run = () -> {
+            progressBar.setIndeterminate(true);
             buttonStart.setEnabled(false);
             for (String keySport : listSportSelect.getSelectedValuesList()) {
                 HashMap<String, String> mapTourMat = connection.loadTournaments(mapMenu.get(keySport));
@@ -109,6 +113,7 @@ public class ConnectionForm extends JFrame {
             listActiveMatches.setListData(listOfActives.toArray(new String[0]));
 
             buttonStart.setEnabled(true);
+            progressBar.setIndeterminate(false);
 
         };
 
