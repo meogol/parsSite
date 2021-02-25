@@ -5,7 +5,9 @@
     <constraints>
       <xy x="48" y="54" width="891" height="499"/>
     </constraints>
-    <properties/>
+    <properties>
+      <toolTipText value="HUMBot"/>
+    </properties>
     <border type="none"/>
     <children>
       <scrollpane id="17b36" binding="HUMBot">

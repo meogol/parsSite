@@ -140,7 +140,7 @@ public class Connect implements Runnable{
                 Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
                 Date date = calendar.getTime();
 
-                Cell cell = row.createCell(7);
+                Cell cell = row.createCell(9);
                 cell.setCellValue(date.toString());
 
 
