@@ -38,7 +38,7 @@ public class Connect implements Runnable{
             matches  = getMatches();
         } catch (IOException e) {
             new Load().loadUrl();
-            LOG.info(e.toString());
+            LOG.info("thread "+hashKey+" "+e.toString());
         }
     }
 
@@ -53,7 +53,7 @@ public class Connect implements Runnable{
             matches  =  getMatches();
         } catch (IOException e) {
             new Load().loadUrl();
-            LOG.info(e.toString());
+            LOG.info("thread "+hashKey+" "+e.toString());
 
         }
     }
@@ -183,7 +183,7 @@ public class Connect implements Runnable{
             thisMatches = getMatches();
         } catch (IOException e) {
             new Load().loadUrl();
-            LOG.info(e.toString());
+            LOG.info("thread "+hashKey+" "+e.toString());
 
             return;
         }
@@ -221,7 +221,7 @@ public class Connect implements Runnable{
 
             }
             catch ( URISyntaxException e){
-                LOG.error(e.toString());
+                LOG.error("thread "+hashKey+" "+e.toString());
             }
         }
     }
@@ -231,7 +231,7 @@ public class Connect implements Runnable{
             try {
                 checkMatches();
             } catch (URISyntaxException e) {
-                LOG.error(e.toString());
+                LOG.error("thread "+hashKey+" "+e.toString());
             }
         }
     }
