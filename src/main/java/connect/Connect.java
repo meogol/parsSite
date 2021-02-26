@@ -218,7 +218,6 @@ public class Connect implements Runnable{
         while ((ConnectionForm.getActiveTread().get(hashKey)) || !isAllWrits) {
             try {
                 checkMatches();
-                LOG.error("e.toString()");
 
             }
             catch ( URISyntaxException e){

@@ -24,6 +24,7 @@ public class loading extends JDialog {
         {
             loading dialog = new loading();
             dialog.pack();
+            dialog.setLocationRelativeTo(null);
             dialog.setVisible(true);
 
             while(!Thread.interrupted())  // Clears interrupted status!
@@ -43,6 +44,7 @@ public class loading extends JDialog {
         threadLoadingForm.interrupt();
 
         dialogFirst.pack();
+        dialogFirst.setLocationRelativeTo(null);
         dialogFirst.setVisible(true);
 
 
@@ -51,4 +53,5 @@ public class loading extends JDialog {
        // System.exit(0);
 
     }
+
 }
