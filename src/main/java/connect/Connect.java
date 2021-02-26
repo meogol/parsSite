@@ -11,6 +11,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -28,6 +30,7 @@ public class Connect implements Runnable{
     String sportKey = "";
     HashMap<String, String> matches;
     Boolean isAllWrits = true;
+    private static final Logger LOG = LoggerFactory.getLogger(Connect.class);
 
     public Connect(){
         new Load().loadUrl();
@@ -35,7 +38,7 @@ public class Connect implements Runnable{
             matches  = getMatches();
         } catch (IOException e) {
             new Load().loadUrl();
-
+            LOG.info(e.toString());
         }
     }
 
@@ -50,6 +53,7 @@ public class Connect implements Runnable{
             matches  =  getMatches();
         } catch (IOException e) {
             new Load().loadUrl();
+            LOG.info(e.toString());
 
         }
     }
@@ -179,8 +183,8 @@ public class Connect implements Runnable{
             thisMatches = getMatches();
         } catch (IOException e) {
             new Load().loadUrl();
+            LOG.info(e.toString());
 
-            e.printStackTrace();
             return;
         }
 
@@ -214,10 +218,11 @@ public class Connect implements Runnable{
         while ((ConnectionForm.getActiveTread().get(hashKey)) || !isAllWrits) {
             try {
                 checkMatches();
-                System.out.println("tread "+hashKey+" "+!isAllWrits);
+                LOG.error("e.toString()");
+
             }
             catch ( URISyntaxException e){
-                e.printStackTrace();
+                LOG.error(e.toString());
             }
         }
     }
@@ -227,7 +232,7 @@ public class Connect implements Runnable{
             try {
                 checkMatches();
             } catch (URISyntaxException e) {
-                e.printStackTrace();
+                LOG.error(e.toString());
             }
         }
     }
