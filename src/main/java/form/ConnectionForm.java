@@ -4,7 +4,9 @@ import connect.Connect;
 import form.core.Load;
 
 import javax.swing.*;
-import java.awt.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +28,8 @@ public class ConnectionForm extends JFrame {
     private ExecutorService exec = Executors.newCachedThreadPool();
     private static HashMap<String, Boolean> activeTread = new HashMap<String, Boolean>();
     private HashMap<String, String> mapMenu;
-    ArrayList<String> listOfActives = new ArrayList<String>();
+    private ArrayList<String> listOfActives = new ArrayList<String>();
+    private static final Logger LOG = LoggerFactory.getLogger(ConnectionForm.class);
 
     public ConnectionForm(String title){
         super(title);

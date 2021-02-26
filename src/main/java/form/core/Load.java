@@ -6,9 +6,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.ProtocolException;
-import java.net.URL;
 import java.util.HashMap;
 
 public class Load {
@@ -55,22 +53,28 @@ public class Load {
      */
     public static void loadUrl()  {
         try {
-            String url = "https://kbepha.top/s/15ns?s1=cbb&amp;p=%2Fuser%2Fregistration%2F&amp;fp=";
+            String url = "https://betwinner.azurewebsites.net/";
+            //String url = "https://mnnunh.top/s/15ns?s1=cbb&amp;p=%2Fuser%2Fregistration%2F&amp;fp=";
 
-            URL obj = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-            connection.setRequestMethod("GET");
+            Document doc = Jsoup.connect(url).get();
+            String hrefRedirectUrlStr = doc.children().first().getElementsByTag("body").first()
+                    .getElementsByTag("script").last().childNode(0).outerHtml();
 
+            String hrefRedirectUrl =hrefRedirectUrlStr.split("'href','")[1].split("'\\);")[0];
 
-            connection.getInputStream();
+            doc = Jsoup.connect(hrefRedirectUrl).get();
+            String redirectStr = doc.getElementsByTag("#root").first()
+                    .getElementsByTag("head").first()
+                    .getElementsByTag("meta").first()
+                    .attr("content")
+                    .split("url=")[1];
 
-            String s = connection.getURL().toString();
+            doc = Jsoup.connect(redirectStr).get();
+            String location = doc.location();
 
-            connection.disconnect();
+            String[] siteUrl = location.split("registration/");
 
-            String[] ss = s.split("\\?");
-
-            Load.url = ss[0];
+            Load.url = siteUrl[0];
 
         }
         catch (ProtocolException ex){
