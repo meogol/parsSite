@@ -51,7 +51,7 @@ public class Load {
     /**
      * Обновляет урл сйта. Вызывается автоматически при ошибке подключения
      */
-    public static void loadUrl()  {
+    public void loadUrl()  {
         try {
             String url = "https://betwinner.azurewebsites.net/";
             //String url = "https://mnnunh.top/s/15ns?s1=cbb&amp;p=%2Fuser%2Fregistration%2F&amp;fp=";

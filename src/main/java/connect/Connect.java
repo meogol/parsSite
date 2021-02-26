@@ -30,16 +30,18 @@ public class Connect implements Runnable{
     Boolean isAllWrits = true;
 
     public Connect(){
-        Load.loadUrl();
+        new Load().loadUrl();
         try {
             matches  = getMatches();
         } catch (IOException e) {
-            Load.loadUrl();
+            new Load().loadUrl();
+
         }
     }
 
     public Connect(String fullUrl, String hashKey, String sportKey)  {
-        Load.loadUrl();
+        new Load().loadUrl();
+
         this.connectUrl = fullUrl;
         this.hashKey = hashKey;
         this.sportKey = sportKey;
@@ -47,7 +49,8 @@ public class Connect implements Runnable{
         try {
             matches  =  getMatches();
         } catch (IOException e) {
-            Load.loadUrl();
+            new Load().loadUrl();
+
         }
     }
 
@@ -57,7 +60,8 @@ public class Connect implements Runnable{
      * @throws IOException
      */
     public HashMap<String, String> getMatches() throws IOException {
-        Load.loadUrl();
+        new Load().loadUrl();
+
 
         HashMap<String, String> thisMatches = new HashMap<>();
 
@@ -174,7 +178,8 @@ public class Connect implements Runnable{
         try {
             thisMatches = getMatches();
         } catch (IOException e) {
-            Load.loadUrl();
+            new Load().loadUrl();
+
             e.printStackTrace();
             return;
         }
@@ -209,6 +214,7 @@ public class Connect implements Runnable{
         while ((ConnectionForm.getActiveTread().get(hashKey)) || !isAllWrits) {
             try {
                 checkMatches();
+                System.out.println("tread "+hashKey+" "+!isAllWrits);
             }
             catch ( URISyntaxException e){
                 e.printStackTrace();
