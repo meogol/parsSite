@@ -145,9 +145,9 @@ public class ConnectionForm extends JFrame {
 
 
     public static void main(String[] args) throws IOException {
-        ConnectionForm dialog = new ConnectionForm("HUMBot");
-        dialog.setVisible(true);
-        dialog.pack();
+        ConnectionForm dialogFirst = new ConnectionForm("HUMBot");
+        dialogFirst.setVisible(true);
+        dialogFirst.pack();
 
     }
 
