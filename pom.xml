@@ -6,7 +6,7 @@
 
     <groupId>meogolAndEugeneFolkast</groupId>
     <artifactId>HUMBot</artifactId>
-    <version>1.01-Relise</version>
+    <version>1.02-Relise</version>
 
     <properties>
         <maven.compiler.source>15</maven.compiler.source>
@@ -65,7 +65,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>form.ConnectionForm</mainClass>
+                            <mainClass>form.loading</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
