@@ -50,7 +50,7 @@ public class loading extends JDialog {
                     Thread.currentThread().interrupt();
                 }
         };
-        
+
         Thread threadLoadingForm = new Thread(runLoadingForm);
         threadLoadingForm.start();
 
