@@ -36,15 +36,35 @@ public class loading extends JDialog {
     }
 
     public static void main(String[] args) {
-        loading dialog = new loading();
-        dialog.pack();
-        dialog.setVisible(true);
+        Runnable runLoadingForm = () ->
+        {
+            loading dialog = new loading();
+            dialog.pack();
+            dialog.setVisible(true);
 
-            ConnectionForm dialogFirst = new ConnectionForm("HUMBot");
-            dialogFirst.setVisible(true);
-            dialogFirst.pack();
+            while(!Thread.interrupted())  // Clears interrupted status!
+                try {
+                    throw new InterruptedException();
+                } catch (InterruptedException e) {
+                    dialog.dispose();
+                    Thread.currentThread().interrupt();
+                }
+        };
+        
+        Thread threadLoadingForm = new Thread(runLoadingForm);
+        threadLoadingForm.start();
 
-        System.exit(0);
+        ConnectionForm dialogFirst = new ConnectionForm("HUMBot");
+
+        threadLoadingForm.interrupt();
+
+        dialogFirst.pack();
+        dialogFirst.setVisible(true);
+
+
+
+
+       // System.exit(0);
 
     }
 }

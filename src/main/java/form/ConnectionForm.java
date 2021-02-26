@@ -30,7 +30,6 @@ public class ConnectionForm extends JFrame {
     private static HashMap<String, Boolean> activeTread = new HashMap<String, Boolean>();
     private HashMap<String, String> mapMenu;
     private ArrayList<String> listOfActives = new ArrayList<String>();
-    private static final Logger LOG = LoggerFactory.getLogger(ConnectionForm.class);
 
     public ConnectionForm(String title){
         super(title);
@@ -144,10 +143,10 @@ public class ConnectionForm extends JFrame {
     }
 
 
-    public static void main(String[] args) throws IOException {
-        ConnectionForm dialogFirst = new ConnectionForm("HUMBot");
-        dialogFirst.setVisible(true);
-        dialogFirst.pack();
+    public static void main(String[] args) {
+        ConnectionForm dialog = new ConnectionForm("HUMBot");
+        dialog.setVisible(true);
+        dialog.pack();
 
     }
 

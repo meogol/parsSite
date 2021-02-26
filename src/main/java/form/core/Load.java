@@ -1,9 +1,12 @@
 package form.core;
 
+import form.ConnectionForm;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.ProtocolException;
@@ -11,6 +14,7 @@ import java.util.HashMap;
 
 public class Load {
     private static String url = "https://betwin52436.site/";
+    private static final Logger LOG = LoggerFactory.getLogger(Load.class);
 
 
     /**
@@ -42,7 +46,8 @@ public class Load {
             return menu;
 
         } catch (IOException e) {
-            System.out.println(e.toString());
+            LOG.error(e.toString());
+
         }
 
         return null;
@@ -78,10 +83,12 @@ public class Load {
 
         }
         catch (ProtocolException ex){
-            ex.printStackTrace();
+            LOG.error(ex.toString());
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(e.toString());
+
+
         }
 
     }
@@ -116,7 +123,8 @@ public class Load {
             return tournaments;
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(e.toString());
+
         }
 
         return null;
