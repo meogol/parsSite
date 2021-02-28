@@ -116,9 +116,14 @@ public class ConnectionForm extends JFrame {
             for (String keySport : listSportSelect.getSelectedValuesList()) {
                 HashMap<String, String> mapTourMat = connection.loadTournaments(mapMenu.get(keySport));
                 for (String keyMatch : listMatchSelect.getSelectedValuesList()) {
-                    activeTread.put(keyMatch, true);
-                    listOfActives.add(keyMatch);
-                    exec.execute(new Connect(mapTourMat.get(keyMatch), keyMatch, mapMenu.get(keySport)));
+                    if (!activeTread.getOrDefault(keyMatch, false)){
+                        listOfActives.add(keyMatch);
+                        activeTread.put(keyMatch,true);
+                        exec.execute(new Connect(mapTourMat.get(keyMatch), keyMatch, mapMenu.get(keySport)));
+                    }
+                    else {
+                        continue;
+                    }
                 }
             }
             listActiveMatches.setListData(listOfActives.toArray(new String[0]));
