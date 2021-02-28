@@ -30,7 +30,7 @@ public class ConnectionForm extends JFrame {
     private static HashMap<String, Boolean> activeTread = new HashMap<String, Boolean>();
     private HashMap<String, String> mapMenu;
     private ArrayList<String> listOfActives = new ArrayList<String>();
-
+    private HashMap<String, String> mapTour;
     public ConnectionForm(String title){
         super(title);
 
@@ -47,7 +47,7 @@ public class ConnectionForm extends JFrame {
 
         ArrayList<String> selectedSport = new ArrayList<String>();
         ArrayList<String> selectedMatches = new ArrayList<String>();
-
+        mapTour = new HashMap<>();
 
 
         buttonStart.addActionListener(new ActionListener() {
@@ -72,10 +72,11 @@ public class ConnectionForm extends JFrame {
                     progressBar.setIndeterminate(true);
                     sportSelectButton.setEnabled(false);
                     buttonStart.setEnabled(false);
+                    mapTour.clear();
 
                     for (String key:listSportSelect.getSelectedValuesList()) {
                         selectedSport.add(key);
-                        HashMap<String, String> mapTour = connection.loadTournaments(mapMenu.get(key));
+                        mapTour = connection.loadTournaments(mapMenu.get(key));
                         for (String keyTwo:mapTour.keySet()){
                             selectedMatches.add(keyTwo);
                         }
@@ -114,12 +115,11 @@ public class ConnectionForm extends JFrame {
             sportSelectButton.setEnabled(false);
 
             for (String keySport : listSportSelect.getSelectedValuesList()) {
-                HashMap<String, String> mapTourMat = connection.loadTournaments(mapMenu.get(keySport));
                 for (String keyMatch : listMatchSelect.getSelectedValuesList()) {
                     if (!activeTread.getOrDefault(keyMatch, false)){
                         listOfActives.add(keyMatch);
                         activeTread.put(keyMatch,true);
-                        exec.execute(new Connect(mapTourMat.get(keyMatch), keyMatch, mapMenu.get(keySport)));
+                        exec.execute(new Connect(mapTour.get(keyMatch), keyMatch, mapMenu.get(keySport)));
                     }
                     else {
                         continue;

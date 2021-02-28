@@ -48,10 +48,6 @@ public class loading extends JDialog {
         dialogFirst.setVisible(true);
 
 
-
-
-       // System.exit(0);
-
     }
 
 }
