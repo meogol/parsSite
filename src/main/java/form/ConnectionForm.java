@@ -7,6 +7,7 @@ import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -68,15 +69,15 @@ public class ConnectionForm extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectedMatches.clear();
-                Runnable run = ()->{
+                Runnable run = () -> {
                     progressBar.setIndeterminate(true);
                     sportSelectButton.setEnabled(false);
                     buttonStart.setEnabled(false);
                     mapTour.clear();
 
-                    for (String key:listSportSelect.getSelectedValuesList()) {
+                    for (String key : listSportSelect.getSelectedValuesList()) {
                         selectedSport.add(key);
-                        mapTour = connection.loadTournaments(mapMenu.get(key));
+                        HashMap<String, String> mapTour = connection.loadTournaments(mapMenu.get(key));
                         for (String keyTwo:mapTour.keySet()){
                             selectedMatches.add(keyTwo);
                         }
@@ -93,7 +94,7 @@ public class ConnectionForm extends JFrame {
 
             }
         });
-        
+
     }
 
     public static boolean isConnect() {
@@ -116,7 +117,7 @@ public class ConnectionForm extends JFrame {
 
             for (String keySport : listSportSelect.getSelectedValuesList()) {
                 for (String keyMatch : listMatchSelect.getSelectedValuesList()) {
-                    if (!activeTread.getOrDefault(keyMatch, false)){
+                    if (!activeTread.getOrDefault(keyMatch, false)) {
                         listOfActives.add(keyMatch);
                         activeTread.put(keyMatch,true);
                         exec.execute(new Connect(mapTour.get(keyMatch), keyMatch, mapMenu.get(keySport)));
@@ -139,7 +140,7 @@ public class ConnectionForm extends JFrame {
 
     private void onStop() {
         int index = 0;
-        for (Object keySport:listActiveMatches.getSelectedValuesList()){
+        for (Object keySport : listActiveMatches.getSelectedValuesList()) {
             activeTread.put((String) keySport, false);
             index = listActiveMatches.getSelectedIndex();
             listOfActives.remove(index);
