@@ -30,6 +30,8 @@ public class Connect implements Runnable{
     String sportKey = "";
     HashMap<String, String> matches;
     Boolean isAllWrits = true;
+    Boolean timeOutWrite = false;
+
     private static final Logger LOG = LoggerFactory.getLogger(Connect.class);
 
     public Connect(){
@@ -154,7 +156,6 @@ public class Connect implements Runnable{
 
                 row = sheet.createRow(rowCount+=1);
 
-
                 Cell cellNameTwo = row.createCell(0);
                 cellNameTwo.setCellValue(parsKey[1].replace(")","")+")");
 
@@ -179,6 +180,7 @@ public class Connect implements Runnable{
 
     public void checkMatches() throws URISyntaxException {
         HashMap<String, String> thisMatches = null;
+
         try {
             thisMatches = getMatches();
         } catch (IOException e) {
@@ -235,7 +237,5 @@ public class Connect implements Runnable{
             }
         }
     }
-
-
 
 }
