@@ -201,27 +201,25 @@ public class Connect implements Runnable{
         try {
             if (writeMatches.size() != 0) {
                 //данный костыль создаеет задержку для запись, для избежания дублей
-                if(!timeOutWrite){
-                    matches = writeMatches;
+                if (!timeOutWrite) {
+                    matches = thisMatches;
 
-                    for (String key: thisMatches.keySet()) {
-                        matches.put(key, thisMatches.get(key));
+                    for (String key : writeMatches.keySet()) {
+                        matches.put(key, writeMatches.get(key));
                     }
 
-                    timeOutWrite=true;
+                    timeOutWrite = true;
                     isAllWrits = false;
-                }
-                else {
+                } else {
                     writeToXLS(writeMatches);
 
                     isAllWrits = true;
-                    timeOutWrite=false;
+                    timeOutWrite = false;
 
                     matches = thisMatches;
 
                 }
             }
-
         }catch (IOException ex)
         {
             matches = thisMatches;
