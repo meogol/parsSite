@@ -202,10 +202,10 @@ public class Connect implements Runnable{
             if (writeMatches.size() != 0) {
                 //данный костыль создаеет задержку для запись, для избежания дублей
                 if(!timeOutWrite){
-                    matches = thisMatches;
+                    matches = writeMatches;
 
-                    for (String key: writeMatches.keySet()) {
-                        matches.put(key, writeMatches.get(key));
+                    for (String key: thisMatches.keySet()) {
+                        matches.put(key, thisMatches.get(key));
                     }
 
                     timeOutWrite=true;
