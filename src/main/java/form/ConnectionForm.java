@@ -119,7 +119,7 @@ public class ConnectionForm extends JFrame {
                     if (!activeTread.getOrDefault(keyMatch, false)){
                         listOfActives.add(keyMatch);
                         activeTread.put(keyMatch,true);
-                        exec.execute(new Connect(mapTourMat.get(keyMatch), keyMatch, mapMenu.get(keySport)));
+                        exec.execute(new Connect(mapTour.get(keyMatch), keyMatch, mapMenu.get(keySport)));
                     }
                     else {
                         continue;
