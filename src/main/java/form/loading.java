@@ -1,5 +1,9 @@
 package form;
 
+import form.core.Load;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.IOException;
@@ -8,6 +12,7 @@ import java.io.IOException;
 public class loading extends JDialog {
     private JPanel contentPane;
     public JProgressBar progressBar;
+    private static final Logger LOG = LoggerFactory.getLogger(Load.class);
 
     public loading() {
         setContentPane(contentPane);
@@ -39,14 +44,16 @@ public class loading extends JDialog {
         Thread threadLoadingForm = new Thread(runLoadingForm);
         threadLoadingForm.start();
 
-        ConnectionForm dialogFirst = new ConnectionForm("HUMBot");
+        try {
+            ConnectionForm dialogFirst = new ConnectionForm("HUMBot");
+            dialogFirst.pack();
+            dialogFirst.setLocationRelativeTo(null);
+            dialogFirst.setVisible(true);
+        }catch (Exception ex){
+            LOG.error(ex.toString());
+        }
 
         threadLoadingForm.interrupt();
-
-        dialogFirst.pack();
-        dialogFirst.setLocationRelativeTo(null);
-        dialogFirst.setVisible(true);
-
 
     }
 

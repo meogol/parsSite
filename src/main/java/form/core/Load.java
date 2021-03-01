@@ -13,7 +13,7 @@ import java.net.ProtocolException;
 import java.util.HashMap;
 
 public class Load {
-    private static String url = "https://betwin52436.site/";
+    private static String url = "https://betwin17926.site/";
     private static final Logger LOG = LoggerFactory.getLogger(Load.class);
 
 
