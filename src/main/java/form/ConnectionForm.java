@@ -1,15 +1,9 @@
 package form;
 
-import connect.Connect;
-import form.core.Load;
+import core.ParsMatches;
+import core.load.Load;
 
 import javax.swing.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.awt.event.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
@@ -27,10 +21,10 @@ public class ConnectionForm extends JFrame {
     private JProgressBar progressBar;
     private JScrollPane HUMBot;
     private static boolean connect = true;
-    private ExecutorService exec = Executors.newCachedThreadPool();
-    private static HashMap<String, Boolean> activeTread = new HashMap<String, Boolean>();
+    private final ExecutorService exec = Executors.newCachedThreadPool();
+    private static HashMap<String, Boolean> activeTread = new HashMap<>();
     private HashMap<String, String> mapMenu;
-    private ArrayList<String> listOfActives = new ArrayList<String>();
+    private ArrayList<String> listOfActives = new ArrayList<>();
     private HashMap<String, String> mapTour;
     public ConnectionForm(String title){
         super(title);
@@ -38,62 +32,19 @@ public class ConnectionForm extends JFrame {
         setContentPane(contentPane);
         getRootPane().setDefaultButton(buttonStart);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        final int SINGLE_SELECTION;
-        Load connection = new Load();
-        mapMenu = connection.loadMenu();
         listSportSelect.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        listSportSelect.setListData(mapMenu.keySet().toArray(new String[0]));
         this.setTitle("HUMBot");
 
-
-        ArrayList<String> selectedSport = new ArrayList<String>();
-        ArrayList<String> selectedMatches = new ArrayList<String>();
+        ArrayList<String> selectedSport = new ArrayList<>();
+        ArrayList<String> selectedMatches = new ArrayList<>();
         mapTour = new HashMap<>();
+        mapMenu = Load.loadMenu();
 
+        listSportSelect.setListData(mapMenu.keySet().toArray(new String[0]));
 
-        buttonStart.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-                onStart(connection);
-
-            }
-
-        });
-        buttonStop.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onStop();
-            }
-        });
-
-        sportSelectButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectedMatches.clear();
-                Runnable run = () -> {
-                    progressBar.setIndeterminate(true);
-                    sportSelectButton.setEnabled(false);
-                    buttonStart.setEnabled(false);
-                    mapTour.clear();
-
-                    for (String key : listSportSelect.getSelectedValuesList()) {
-                        selectedSport.add(key);
-                        mapTour = connection.loadTournaments(mapMenu.get(key));
-                        for (String keyTwo:mapTour.keySet()){
-                            selectedMatches.add(keyTwo);
-                        }
-                    }
-                    listMatchSelect.setListData(selectedMatches.toArray(new String[0]));
-
-                    sportSelectButton.setEnabled(true);
-                    buttonStart.setEnabled(true);
-                    progressBar.setIndeterminate(false);
-
-                };
-
-                exec.execute(run);
-
-            }
-        });
+        buttonStart.addActionListener(e -> onStart());
+        buttonStop.addActionListener(e -> onStop());
+        sportSelectButton.addActionListener(e -> onSelectSport(selectedSport, selectedMatches));
 
     }
 
@@ -109,7 +60,32 @@ public class ConnectionForm extends JFrame {
         return activeTread;
     }
 
-    private void onStart(Load connection) {
+    private void onSelectSport(ArrayList<String> selectedSport, ArrayList<String> selectedMatches){
+        selectedMatches.clear();
+        Runnable run = () -> {
+            progressBar.setIndeterminate(true);
+            sportSelectButton.setEnabled(false);
+            buttonStart.setEnabled(false);
+            mapTour.clear();
+
+            for (String key : listSportSelect.getSelectedValuesList()) {
+                selectedSport.add(key);
+                mapTour = Load.loadTournaments(mapMenu.get(key));
+                selectedMatches.addAll(mapTour.keySet());
+            }
+
+            listMatchSelect.setListData(selectedMatches.toArray(new String[0]));
+
+            sportSelectButton.setEnabled(true);
+            buttonStart.setEnabled(true);
+            progressBar.setIndeterminate(false);
+
+        };
+
+        exec.execute(run);
+    }
+
+    private void onStart() {
         Runnable run = () -> {
             progressBar.setIndeterminate(true);
             buttonStart.setEnabled(false);
@@ -120,7 +96,7 @@ public class ConnectionForm extends JFrame {
                     if (!activeTread.getOrDefault(keyMatch, false)) {
                         listOfActives.add(keyMatch);
                         activeTread.put(keyMatch,true);
-                        exec.execute(new Connect(mapTour.get(keyMatch), keyMatch, mapMenu.get(keySport)));
+                        exec.execute(new ParsMatches(mapTour.get(keyMatch), keyMatch, mapMenu.get(keySport)));
                     }
                     else {
                         continue;
@@ -140,6 +116,7 @@ public class ConnectionForm extends JFrame {
 
     private void onStop() {
         int index = 0;
+
         for (Object keySport : listActiveMatches.getSelectedValuesList()) {
             activeTread.put((String) keySport, false);
             index = listActiveMatches.getSelectedIndex();
@@ -155,5 +132,6 @@ public class ConnectionForm extends JFrame {
         dialog.pack();
 
     }
+
 
 }

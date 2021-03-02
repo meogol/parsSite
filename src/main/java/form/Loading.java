@@ -1,20 +1,18 @@
 package form;
 
-import form.core.Load;
+import core.load.Load;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-import java.awt.event.*;
-import java.io.IOException;
 
 
-public class loading extends JDialog {
+public class Loading extends JDialog {
     private JPanel contentPane;
     public JProgressBar progressBar;
     private static final Logger LOG = LoggerFactory.getLogger(Load.class);
 
-    public loading() {
+    public Loading() {
         setContentPane(contentPane);
         setModal(true);
         progressBar.setIndeterminate(true);
@@ -27,7 +25,7 @@ public class loading extends JDialog {
     public static void main(String[] args) {
         Runnable runLoadingForm = () ->
         {
-            loading dialog = new loading();
+            Loading dialog = new Loading();
             dialog.pack();
             dialog.setLocationRelativeTo(null);
             dialog.setVisible(true);
