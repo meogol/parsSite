@@ -28,6 +28,7 @@ public class ConnectionForm extends JFrame {
     private JPanel ContentPanel;
     private JProgressBar progressBar;
     private JScrollPane HUMBot;
+    private JButton sportsManButton;
     private static boolean connect = true;
     private final ExecutorService exec = Executors.newCachedThreadPool();
     private static HashMap<String, Boolean> activeTread = new HashMap<>();
@@ -57,6 +58,12 @@ public class ConnectionForm extends JFrame {
 
         addSavingUrlToExit();
 
+        sportsManButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            sportsmanWriteScore();
+            }
+        });
     }
     private void addSavingUrlToExit(){
         this.addWindowListener(new WindowListener(){
@@ -206,5 +213,16 @@ public class ConnectionForm extends JFrame {
 
     }
 
+    public void sportsmanWriteScore(){
+        FileDialog fd = new FileDialog(this, "Выберите файл...", FileDialog.LOAD);
+        fd.setDirectory("C:\\");
+        fd.setFile("*.xml");
+        fd.setVisible(true);
+        String filename = fd.getFile();
+        if (filename == null)
+            System.out.println("Файл не найден");
+        else
+            System.out.println("Вы выбрали " + filename);
+    }
 
 }
