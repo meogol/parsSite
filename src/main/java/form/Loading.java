@@ -47,6 +47,7 @@ public class Loading extends JDialog {
             dialogFirst.pack();
             dialogFirst.setLocationRelativeTo(null);
             dialogFirst.setVisible(true);
+
         }catch (Exception ex){
             LOG.error(ex.toString());
         }

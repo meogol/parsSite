@@ -19,20 +19,18 @@ public class ParsMatches implements Runnable{
     private static final Logger LOG = LoggerFactory.getLogger(ParsMatches.class);
 
     public ParsMatches(){
-        Load.loadUrl();
+
         try {
             matches  = Load.loadMatches(connectUrl);
         } catch (IOException e) {
             Load.loadUrl();
-
+            matches = new HashMap<>();
             LOG.info("thread "+hashKey+" "+e.toString());
         }
     }
 
+
     public ParsMatches(String fullUrl, String hashKey, String sportKey)  {
-        Load.loadUrl();
-
-
         this.connectUrl = fullUrl;
         this.hashKey = hashKey;
         this.sportKey = sportKey;
@@ -42,23 +40,26 @@ public class ParsMatches implements Runnable{
 
         } catch (IOException e) {
             Load.loadUrl();
-
+            matches = new HashMap<>();
             LOG.info("thread "+hashKey+" "+e.toString());
 
         }
     }
 
-    public void checkMatches() throws URISyntaxException {
+    /**
+     * метод получает с сайта матчи и пишет в файл завершенные
+     * @throws URISyntaxException
+     */
+    public void checkMatches() throws URISyntaxException, IOException {
         HashMap<String, String> thisMatches;
         HashMap<String, String> writeMatches = new HashMap<>();
 
         try {
             thisMatches = Load.loadMatches(connectUrl);
         } catch (IOException e) {
-            Load.loadUrl();
             LOG.info("thread "+hashKey+" "+e.toString());
 
-            return;
+            throw e;
         }
 
 
@@ -71,6 +72,7 @@ public class ParsMatches implements Runnable{
         try {
             if (writeMatches.size() != 0) {
                 String fileName = connectUrl.split("/")[2].split("-",2)[1];
+
                 Write write = new Write();
                 write.writeToXLS(writeMatches, fileName);
             }
@@ -83,6 +85,12 @@ public class ParsMatches implements Runnable{
         }
     }
 
+    /**
+     * метод добавляет в ассив активных
+     * матчей незаписанные по какой-либо причине матчи
+     * @param thisMatches список матчей, полученных с сайта
+     * @param writeMatches список незаписанных матчей
+     */
     private void saveDontWriteMatches(HashMap<String, String> thisMatches, HashMap<String, String> writeMatches){
         matches = thisMatches;
         isAllWrits = false;
@@ -96,20 +104,12 @@ public class ParsMatches implements Runnable{
         while ((ConnectionForm.getActiveTread().get(hashKey)) || !isAllWrits) {
             try {
                 checkMatches();
-
             }
             catch ( URISyntaxException e){
                 LOG.error("thread "+hashKey+" "+e.toString());
-            }
-        }
-    }
-
-    public void testLoad(){
-        while (ConnectionForm.isConnect() || !isAllWrits) {
-            try {
-                checkMatches();
-            } catch (URISyntaxException e) {
+            } catch (IOException e) {
                 LOG.error("thread "+hashKey+" "+e.toString());
+                Load.loadUrl();
             }
         }
     }
