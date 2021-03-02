@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 public class ConnectionForm extends JFrame {
     private JPanel contentPane;
@@ -224,9 +225,9 @@ public class ConnectionForm extends JFrame {
         fd.setVisible(true);
         String filename = fd.getFile();
         if (filename == null)
-            System.out.println("Файл не найден");
+            showMessageDialog(this,"Файл не выбран");
         else
-            System.out.println("Вы выбрали " + filename);
+            showMessageDialog(this,"Вы выбрали "+filename);
 
 
 
