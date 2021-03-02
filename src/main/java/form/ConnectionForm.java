@@ -5,8 +5,6 @@ import core.load.Load;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.FileInputStream;
@@ -205,6 +203,7 @@ public class ConnectionForm extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public static void main(String[] args) {
