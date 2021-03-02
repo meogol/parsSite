@@ -214,16 +214,22 @@ public class ConnectionForm extends JFrame {
 
     }
 
+    /**
+     * Метод вызывает диалоговое окно по нажатию на кнопку "Вывести информацию по спортсменам"
+     */
     public void sportsmanWriteScore(){
         FileDialog fd = new FileDialog(this, "Выберите файл...", FileDialog.LOAD);
         fd.setDirectory("C:\\");
-        fd.setFile("*.xml");
+        fd.setFile("*.xls");
         fd.setVisible(true);
         String filename = fd.getFile();
         if (filename == null)
             System.out.println("Файл не найден");
         else
             System.out.println("Вы выбрали " + filename);
+
+
+
     }
 
 }
