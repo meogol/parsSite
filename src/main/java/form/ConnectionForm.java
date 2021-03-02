@@ -216,7 +216,9 @@ public class ConnectionForm extends JFrame {
     }
 
     /**
-     * Метод вызывает диалоговое окно по нажатию на кнопку "Вывести информацию по спортсменам"
+     * Метод вызывает диалоговое окно c выбором *.xls файла
+     * по нажатию на кнопку "Вывести информацию по спортсменам"
+     *
      */
     public void sportsmanWriteScore(){
         FileDialog fd = new FileDialog(this, "Выберите файл...", FileDialog.LOAD);
@@ -228,9 +230,7 @@ public class ConnectionForm extends JFrame {
             showMessageDialog(this,"Файл не выбран");
         else
             showMessageDialog(this,"Вы выбрали "+filename);
-
-
-
+        
     }
 
 }
