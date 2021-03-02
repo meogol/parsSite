@@ -4,8 +4,15 @@ import core.ParsMatches;
 import core.load.Load;
 
 import javax.swing.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -31,9 +38,10 @@ public class ConnectionForm extends JFrame {
 
         setContentPane(contentPane);
         getRootPane().setDefaultButton(buttonStart);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         listSportSelect.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.setTitle("HUMBot");
+        readUrlToProp();
 
         ArrayList<String> selectedSport = new ArrayList<>();
         ArrayList<String> selectedMatches = new ArrayList<>();
@@ -46,8 +54,52 @@ public class ConnectionForm extends JFrame {
         buttonStop.addActionListener(e -> onStop());
         sportSelectButton.addActionListener(e -> onSelectSport(selectedSport, selectedMatches));
 
-    }
+        addSavingUrlToExit();
 
+    }
+    private void addSavingUrlToExit(){
+        this.addWindowListener(new WindowListener(){
+
+                                   @Override
+                                   public void windowOpened(WindowEvent e) {
+
+                                   }
+
+                                   @Override
+                                   public void windowClosing(WindowEvent e) {
+                                       writeUrlToProp();
+                                       e.getWindow().setVisible(false);
+                                       System.exit(0);
+                                   }
+
+                                   @Override
+                                   public void windowClosed(WindowEvent e) {
+
+                                   }
+
+                                   @Override
+                                   public void windowIconified(WindowEvent e) {
+
+                                   }
+
+                                   @Override
+                                   public void windowDeiconified(WindowEvent e) {
+
+                                   }
+
+                                   @Override
+                                   public void windowActivated(WindowEvent e) {
+
+                                   }
+
+                                   @Override
+                                   public void windowDeactivated(WindowEvent e) {
+
+                                   }
+                               }
+
+        );
+    }
     public static boolean isConnect() {
         return connect;
     }
@@ -93,14 +145,12 @@ public class ConnectionForm extends JFrame {
 
             for (String keySport : listSportSelect.getSelectedValuesList()) {
                 for (String keyMatch : listMatchSelect.getSelectedValuesList()) {
-                    if (!activeTread.getOrDefault(keyMatch, false)) {
-                        listOfActives.add(keyMatch);
-                        activeTread.put(keyMatch,true);
-                        exec.execute(new ParsMatches(mapTour.get(keyMatch), keyMatch, mapMenu.get(keySport)));
-                    }
-                    else {
+                    if (activeTread.getOrDefault(keyMatch, false))
                         continue;
-                    }
+
+                    listOfActives.add(keyMatch);
+                    activeTread.put(keyMatch,true);
+                    exec.execute(new ParsMatches(mapTour.get(keyMatch), keyMatch, mapMenu.get(keySport)));
                 }
             }
             listActiveMatches.setListData(listOfActives.toArray(new String[0]));
@@ -125,6 +175,27 @@ public class ConnectionForm extends JFrame {
         listActiveMatches.setListData(listOfActives.toArray(new String[0]));
     }
 
+    private void readUrlToProp(){
+        Properties prop = new Properties();
+        try {
+            prop.load(new FileInputStream("res.properties"));
+            Load.setUrl(prop.getProperty("connect_url"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeUrlToProp(){
+        Properties prop = new Properties();
+        try {
+            FileOutputStream output = new FileOutputStream("res.properties");
+            prop.setProperty("connect_url", Load.getUrl());
+            prop.store(output, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) {
         ConnectionForm dialog = new ConnectionForm("HUMBot");

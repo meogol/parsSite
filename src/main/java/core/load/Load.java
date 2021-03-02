@@ -23,7 +23,6 @@ public class Load {
      * @throws IOException
      */
     public static HashMap<String, String> loadMenu() {
-        loadUrl();
 
         HashMap<String, String> menu = new HashMap<>();
 
@@ -46,10 +45,11 @@ public class Load {
 
         } catch (IOException e) {
             LOG.error(e.toString());
+            loadUrl();
+            return loadMenu();
 
         }
 
-        return null;
     }
 
     /**
@@ -79,14 +79,12 @@ public class Load {
             String[] siteUrl = location.split("registration/");
 
             Load.url = siteUrl[0];
-
         }
         catch (ProtocolException ex){
             LOG.error(ex.toString());
 
         } catch (IOException e) {
             LOG.error(e.toString());
-
 
         }
 
@@ -122,6 +120,7 @@ public class Load {
 
         } catch (IOException e) {
             LOG.error(e.toString());
+            loadUrl();
 
         }
 
@@ -171,5 +170,9 @@ public class Load {
 
     public static String getUrl() {
         return url;
+    }
+
+    public static void setUrl(String url) {
+        Load.url = url;
     }
 }
