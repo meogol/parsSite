@@ -126,15 +126,20 @@ public class Connect implements Runnable{
             int rowCount = sheet.getPhysicalNumberOfRows();
 
             for (String key: newRow.keySet()) {
-                Row row = sheet.createRow(rowCount+=1);
-                row = sheet.createRow(rowCount+=1);
 
                 String score = newRow.get(key);
 
-                String[] parsScore = score.split(" ");
+                String[] parsScore = score.trim().split(" ");
+
+                if((parsScore[0].equals("0") && parsScore[parsScore.length / 2].equals("0")) ||
+                (Integer.parseInt(parsScore[0])+ Integer.parseInt(parsScore[parsScore.length / 2]) != parsScore.length / 2 - 1)){
+                    continue;
+                }
 
                 String[] parsKey = key.trim().split("\\) ");
 
+                Row row = sheet.createRow(rowCount+=1);
+                row = sheet.createRow(rowCount+=1);
 
                 Cell cellName = row.createCell(0);
                 cellName.setCellValue(parsKey[0]+")");
@@ -201,6 +206,7 @@ public class Connect implements Runnable{
         try {
             if (writeMatches.size() != 0) {
                 writeToXLS(writeMatches);
+                System.out.println(hashKey+" "+writeMatches);
             }
             matches = thisMatches;
             isAllWrits = true;
