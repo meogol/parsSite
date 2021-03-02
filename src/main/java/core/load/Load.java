@@ -138,8 +138,6 @@ public class Load {
         Document doc = Jsoup.connect(Load.getUrl() +"ru/"+connectUrl).data("query", "Java")
                 .userAgent("Mozilla").get();
 
-        Elements ligaMenu = doc.getElementsByClass("imp");
-
 
         Elements newsHeadlines = doc.getElementsByClass("sports_widget");
 
