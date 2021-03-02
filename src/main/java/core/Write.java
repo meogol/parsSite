@@ -101,12 +101,11 @@ public class Write {
         for (String key: newRow.keySet()) {
             String[] names= parsName(key);
             String[][] scores = parsScore(newRow.get(key));
-
-            rowCount+=1;
-
+            
             if(names.length !=2 || scores == null)
                 continue;
 
+            rowCount+=2;
 
             for(int i =0; i<names.length; i++){
                 Row row = sheet.createRow(rowCount+=1);
