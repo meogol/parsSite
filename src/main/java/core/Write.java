@@ -78,6 +78,8 @@ public class Write {
     private String[][] parsScore(String score){
         String[] parsScore = score.trim().split(" ");
 
+        if(parsScore.length<=2)
+            return null;
         if((parsScore[0].equals("0") && parsScore[parsScore.length / 2].equals("0")) ||
                 (Integer.parseInt(parsScore[0])+ Integer.parseInt(parsScore[parsScore.length / 2]) != parsScore.length / 2 - 1)){
             return null;
@@ -88,6 +90,8 @@ public class Write {
                 Arrays.copyOfRange(parsScore, parsScore.length / 2, parsScore.length)};
 
     }
+
+
 
     /**
      * Метод генерирует строки xls файла
@@ -101,14 +105,14 @@ public class Write {
         for (String key: newRow.keySet()) {
             String[] names= parsName(key);
             String[][] scores = parsScore(newRow.get(key));
-            
+
             if(names.length !=2 || scores == null)
                 continue;
 
-            rowCount+=2;
+            Row row = sheet.createRow(rowCount+=2);
 
             for(int i =0; i<names.length; i++){
-                Row row = sheet.createRow(rowCount+=1);
+                row = sheet.createRow(rowCount+=1);
                 Cell cellName = row.createCell(0);
                 cellName.setCellValue(names[i]);
                 sheet.autoSizeColumn(0);
