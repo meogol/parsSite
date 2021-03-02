@@ -205,6 +205,7 @@ public class Connect implements Runnable{
 
         try {
             if (writeMatches.size() != 0) {
+              
                 writeToXLS(writeMatches);
                 System.out.println(hashKey+" "+writeMatches);
             }

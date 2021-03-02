@@ -6,6 +6,7 @@
 
     <groupId>meogolAndEugeneFolkast</groupId>
     <artifactId>HUMBot</artifactId>
+  
     <version>1.043-Relise</version>
 
     <properties>
