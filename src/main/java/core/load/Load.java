@@ -1,6 +1,5 @@
-package form.core;
+package core.load;
 
-import form.ConnectionForm;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -23,7 +22,7 @@ public class Load {
      * @return
      * @throws IOException
      */
-    public HashMap<String, String> loadMenu() {
+    public static HashMap<String, String> loadMenu() {
         loadUrl();
 
         HashMap<String, String> menu = new HashMap<>();
@@ -56,7 +55,7 @@ public class Load {
     /**
      * Обновляет урл сйта. Вызывается автоматически при ошибке подключения
      */
-    public void loadUrl()  {
+    public static void loadUrl()  {
         try {
             String url = "https://betwinner.azurewebsites.net/";
             //String url = "https://mnnunh.top/s/15ns?s1=cbb&amp;p=%2Fuser%2Fregistration%2F&amp;fp=";
@@ -99,8 +98,7 @@ public class Load {
      * @return HasMap с ключем-названи значением- url
      * @throws IOException
      */
-    public HashMap<String,String> loadTournaments(String sport) {
-        loadUrl();
+    public static HashMap<String,String> loadTournaments(String sport) {
 
         HashMap<String, String> tournaments = new HashMap<>();
             
@@ -128,6 +126,47 @@ public class Load {
         }
 
         return null;
+    }
+
+    /**
+     * Создание хешмапа с инфой об активных матчах
+     * @throws IOException
+     */
+    public static HashMap<String, String> loadMatches(String connectUrl) throws IOException {
+
+        HashMap<String, String> thisMatches = new HashMap<>();
+
+        Document doc = Jsoup.connect(Load.getUrl() +"ru/"+connectUrl).data("query", "Java")
+                .userAgent("Mozilla").get();
+
+        Elements ligaMenu = doc.getElementsByClass("imp");
+
+
+        Elements newsHeadlines = doc.getElementsByClass("sports_widget");
+
+        for (Element elem : newsHeadlines) {
+            Elements news = elem.getElementsByClass("c-events-scoreboard__item");
+
+            for (int i = 0; i < news.size(); i++) {
+                if (i % 2 == 0) {
+                    String matchStr = news.get(i).getElementsByClass("c-events__name")
+                            .first().attr("href");
+
+                    if(!matchStr.contains(connectUrl)){
+                        continue;
+                    }
+
+                    Elements sportsmenNames = news.get(i).getElementsByClass("n");
+
+                    Elements score = news.get(i).getElementsByClass("c-events-scoreboard__cell");
+                    String item = score.text();
+                    thisMatches.put(sportsmenNames.text(), item);
+
+                }
+            }
+        }
+
+        return thisMatches;
     }
 
     public static String getUrl() {
