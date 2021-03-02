@@ -126,15 +126,20 @@ public class Connect implements Runnable{
             int rowCount = sheet.getPhysicalNumberOfRows();
 
             for (String key: newRow.keySet()) {
-                Row row = sheet.createRow(rowCount+=1);
-                row = sheet.createRow(rowCount+=1);
 
                 String score = newRow.get(key);
 
-                String[] parsScore = score.split(" ");
+                String[] parsScore = score.trim().split(" ");
+
+                if((parsScore[0].equals("0") && parsScore[parsScore.length / 2].equals("0")) ||
+                (Integer.parseInt(parsScore[0])+ Integer.parseInt(parsScore[parsScore.length / 2]) != parsScore.length / 2 - 1)){
+                    continue;
+                }
 
                 String[] parsKey = key.trim().split("\\) ");
 
+                Row row = sheet.createRow(rowCount+=1);
+                row = sheet.createRow(rowCount+=1);
 
                 Cell cellName = row.createCell(0);
                 cellName.setCellValue(parsKey[0]+")");
@@ -200,33 +205,24 @@ public class Connect implements Runnable{
 
         try {
             if (writeMatches.size() != 0) {
-                //данный костыль создаеет задержку для запись, для избежания дублей
-                if (!timeOutWrite) {
-                    matches = thisMatches;
-
-                    for (String key : writeMatches.keySet()) {
-                        matches.put(key, writeMatches.get(key));
-                    }
-
-                    timeOutWrite = true;
-                    isAllWrits = false;
-                } else {
-                    writeToXLS(writeMatches);
-
-                    isAllWrits = true;
-                    timeOutWrite = false;
-
-                    matches = thisMatches;
-
-                }
+              
+                writeToXLS(writeMatches);
+                System.out.println(hashKey+" "+writeMatches);
             }
+            matches = thisMatches;
+            isAllWrits = true;
+
         }catch (IOException ex)
         {
-            matches = thisMatches;
-            isAllWrits = false;
-            for (String key: writeMatches.keySet()) {
-                matches.put(key, writeMatches.get(key));
-            }
+            writeSaveWriteMatches(thisMatches,writeMatches);
+        }
+    }
+
+    private void writeSaveWriteMatches(HashMap<String, String> thisMatches, HashMap<String, String> writeMatches){
+        matches = thisMatches;
+        isAllWrits = false;
+        for (String key: writeMatches.keySet()) {
+            matches.put(key, writeMatches.get(key));
         }
     }
 

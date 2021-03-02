@@ -77,7 +77,7 @@ public class ConnectionForm extends JFrame {
 
                     for (String key : listSportSelect.getSelectedValuesList()) {
                         selectedSport.add(key);
-                        HashMap<String, String> mapTour = connection.loadTournaments(mapMenu.get(key));
+                        mapTour = connection.loadTournaments(mapMenu.get(key));
                         for (String keyTwo:mapTour.keySet()){
                             selectedMatches.add(keyTwo);
                         }
