@@ -102,7 +102,7 @@ public class Write {
      * @param newRow хэшмап с данными
      */
     public void createData(Sheet sheet, HashMap<String, String> newRow){
-        int rowCount = sheet.getPhysicalNumberOfRows()+1;
+        int rowCount = sheet.getPhysicalNumberOfRows()+2;
 
 
         for (String key: newRow.keySet()) {
