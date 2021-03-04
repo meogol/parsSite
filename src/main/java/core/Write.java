@@ -170,14 +170,13 @@ public class Write {
         Row row;
         String sportsmanName = "";
         int sportsmanScoreOnTable;
-        int buffer = 0;
         HashMap<String, Integer> sportsmanScore = new HashMap<>();
 
 
-        for (int i=2;i<=rowCount;i++){
+        for (int i=3;i<=rowCount;i++){
             row = sheet.getRow(i);
 
-            if (row.getPhysicalNumberOfCells() == 0 ) continue;
+            if (row == null ) continue;
                 if ((row.getCell(0).getCellType() == HSSFCell.CELL_TYPE_STRING)) {
 
                     sportsmanName = row.getCell(0).getStringCellValue();
@@ -186,19 +185,26 @@ public class Write {
                     if(sportsmanScore.containsKey(sportsmanName)){
                         int k = sportsmanScore.get(sportsmanName);
                         sportsmanScore.put(sportsmanName,(k + sportsmanScoreOnTable));
-                        buffer = sportsmanScore.get(sportsmanName);
                     }
                     else {
                         sportsmanScore.put(sportsmanName,sportsmanScoreOnTable);
-                        buffer = sportsmanScore.get(sportsmanName);
                     }
 
-                    Cell cellName = row.createCell(14);
-                    Cell cellScore = row.createCell(15);
-                    cellName.setCellValue(sportsmanName);
-                    cellScore.setCellValue(buffer);
-                    
                 } else continue;
+        }
+        int k=3;
+        for (String key:sportsmanScore.keySet()) {
+            row = sheet.getRow(k);
+            if (row == null ) {
+                k++;
+                continue;
+            }
+            Cell cellName = row.createCell(14);
+            Cell cellScore = row.createCell(15);
+            cellName.setCellValue(key);
+            cellScore.setCellValue(sportsmanScore.get(key));
+            k++;
+
         }
 
 
