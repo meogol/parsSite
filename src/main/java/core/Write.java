@@ -1,13 +1,12 @@
 package core;
 
-import form.ConnectionForm;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 
-import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,11 +29,13 @@ public class Write {
             createFile(p);
         }
 
+
         try (BufferedInputStream fis = new BufferedInputStream(new FileInputStream(filePath))) {
             Workbook workbook = new HSSFWorkbook(fis);
             Sheet sheet = workbook.getSheetAt(0);
 
             createData(sheet, newRow);
+
 
             try (BufferedOutputStream fio = new BufferedOutputStream(new FileOutputStream(filePath))) {
                 workbook.write(fio);
@@ -101,7 +102,7 @@ public class Write {
      * @param newRow хэшмап с данными
      */
     public void createData(Sheet sheet, HashMap<String, String> newRow){
-        int rowCount = sheet.getPhysicalNumberOfRows();
+        int rowCount = sheet.getPhysicalNumberOfRows()+1;
 
 
         for (String key: newRow.keySet()) {
@@ -113,11 +114,21 @@ public class Write {
 
             Row row = sheet.createRow(rowCount+=2);
 
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println();
+            System.out.println(Arrays.toString(names));
+            System.out.println(Arrays.deepToString(scores));
+
             for(int i =0; i<names.length; i++){
                 row = sheet.createRow(rowCount+=1);
                 Cell cellName = row.createCell(0);
                 cellName.setCellValue(names[i]);
                 sheet.autoSizeColumn(0);
+                System.out.println();
+
+                System.out.print(names[i] +"CV"+cellName.getStringCellValue());
 
                 for (int cellIndex = 1, j=0; j < scores[i].length; cellIndex++, j++) {
 
@@ -125,6 +136,7 @@ public class Write {
                     cell.setCellValue(scores[i][j]);
 
                     sheet.autoSizeColumn(cellIndex);
+                    System.out.print(" "+scores[i][j] +"CV"+cell.getStringCellValue());
 
                 }
 
@@ -138,7 +150,6 @@ public class Write {
                 }
 
             }
-
         }
     }
 }

@@ -81,6 +81,7 @@ public class ParsMatches implements Runnable{
 
         }catch (IOException ex)
         {
+            LOG.info(ex.toString());
             saveDontWriteMatches(thisMatches,writeMatches);
         }
     }
