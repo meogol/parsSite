@@ -26,7 +26,7 @@ public class TestWrite {
             Write w = new Write();
             w.writeToXLS(h, "test");
             h.clear();
-            TimeUnit.SECONDS.sleep(3);
+            TimeUnit.SECONDS.sleep(1);
         }
 
     }
