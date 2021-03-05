@@ -1,8 +1,12 @@
 package core;
 
 import jxl.Cell;
-import jxl.CellView;
+import jxl.Sheet;
 import jxl.Workbook;
+import jxl.biff.EmptyCell;
+import jxl.format.Format;
+import jxl.CellView;
+
 import jxl.read.biff.BiffException;
 import jxl.write.*;
 
@@ -153,4 +157,84 @@ public class Write {
         cellDate.setAutosize(true);
         sheet.setColumnView(sheet.getColumns()-1, cellDate);
     }
+
+    /**
+     * Метод получает название нужного файла из conectionform и открывает его.
+     * После вызывает метод обработки файла.
+     * @param fileName
+     * @throws IOException
+     */
+    public void readXls (String fileName) throws IOException{
+        Path p = Paths.get(fileName);
+        String filePath = p.toString();
+
+
+        try {
+
+            WritableWorkbook xlsFile = Workbook.createWorkbook(
+                    new File(p.toString()), Workbook.getWorkbook(
+                            new File(filePath)));
+            var sheets = xlsFile.getSheets();
+            if(sheets.length <1) return;
+
+            var excelSheet = sheets[0];
+
+            writeToXls(excelSheet, xlsFile);
+
+            xlsFile.write();
+            xlsFile.close();
+
+
+        } catch (WriteException | BiffException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    /**
+     * Метод парсит эксельник, отображая справа от полей всех игроков с финальным счётом.
+     * @param excelSheet
+     * @param xlsFile
+     */
+    public void writeToXls(WritableSheet excelSheet, WritableWorkbook xlsFile){
+        HashMap<String, Integer> sportsmanScore = new HashMap<>();
+        Sheet sheet = xlsFile.getSheet(0);
+        int numberOfRows = sheet.getRows();
+
+
+        for (int i=0; i<=numberOfRows; i++){
+
+            if (sheet.getCell(0,i).getClass() == EmptyCell.class) continue;
+            Cell sportsmanName = sheet.getCell(0,i);
+
+            if (sheet.getCell(1,i).getClass() == EmptyCell.class) continue;
+            Cell sportsmanResult = sheet.getCell(1, i);
+            String content = sportsmanName.getContents();
+            if (sportsmanScore.containsKey(sportsmanName.getContents())){
+                int buff = sportsmanScore.get(content);
+                sportsmanScore.put(sportsmanName.getContents(), buff + Integer.valueOf(sportsmanResult.getContents()));
+            }
+            else {
+                sportsmanScore.put(sportsmanName.getContents(), Integer.valueOf(sportsmanResult.getContents()));
+            }
+        }
+
+        int i=0;
+        for (String key: sportsmanScore.keySet()) {
+            Label sportsmanName = new Label(15,i,"" + key);
+            Label sportsmanResult = new Label(16,i,"" + sportsmanScore.get(key));
+            try {
+                excelSheet.addCell(sportsmanName);
+                excelSheet.addCell(sportsmanResult);
+            } catch (WriteException e) {
+                e.printStackTrace();
+            }
+
+            i++;
+        }
+
+    }
+
 }
+

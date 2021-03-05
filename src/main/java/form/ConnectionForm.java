@@ -1,6 +1,7 @@
 package form;
 
 import core.ParsMatches;
+import core.Write;
 import core.load.Load;
 
 import javax.swing.*;
@@ -9,10 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
@@ -221,17 +219,25 @@ public class ConnectionForm extends JFrame {
      * по нажатию на кнопку "Вывести информацию по спортсменам"
      *
      */
-    public void sportsmanWriteScore(){
+    public void sportsmanWriteScore() {
         FileDialog fd = new FileDialog(this, "Выберите файл...", FileDialog.LOAD);
         fd.setDirectory("C:\\");
         fd.setFile("*.xls");
         fd.setVisible(true);
-        String filename = fd.getFile();
-        if (filename == null)
+        String fileName = fd.getFile();
+        if (fileName == null)
             showMessageDialog(this,"Файл не выбран");
         else
-            showMessageDialog(this,"Вы выбрали "+filename);
-        
+            showMessageDialog(this,"Вы выбрали "+fileName);
+
+        Write w = new Write();
+        try {
+            w.readXls(fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
+
 
 }
