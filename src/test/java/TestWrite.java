@@ -13,8 +13,8 @@ public class TestWrite {
         while (true) {
             for (int i = 0; i < 1; i++) {
                 String score = String.valueOf(random.nextInt(10))+" " +
-                        String.valueOf(random.nextInt(10))+" "  +
-                        String.valueOf(random.nextInt(10))+" "  +
+                        String.valueOf(random.nextInt(20))+" "  +
+                        String.valueOf(random.nextInt(20))+" "  +
                         String.valueOf(random.nextInt(10))+" "  +
                         String.valueOf(random.nextInt(10))+" "  +
                         String.valueOf(random.nextInt(10));
