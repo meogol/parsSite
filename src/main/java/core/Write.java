@@ -1,13 +1,11 @@
 package core;
 
-import form.ConnectionForm;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import jxl.Cell;
+import jxl.CellView;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+import jxl.write.*;
 
-import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,22 +21,32 @@ public class Write {
      */
     public void writeToXLS(HashMap<String, String> newRow, String fileName) throws IOException {
 
+
         Path p = Paths.get(fileName+".xls");
         String filePath = p.toString();
 
-        if (!Files.exists(p)) {
-            createFile(p);
-        }
 
-        try (BufferedInputStream fis = new BufferedInputStream(new FileInputStream(filePath))) {
-            Workbook workbook = new HSSFWorkbook(fis);
-            Sheet sheet = workbook.getSheetAt(0);
-
-            createData(sheet, newRow);
-
-            try (BufferedOutputStream fio = new BufferedOutputStream(new FileOutputStream(filePath))) {
-                workbook.write(fio);
+        try {
+            if (!Files.exists(p)) {
+                createFile(p);
             }
+
+            WritableWorkbook xlsFile = Workbook.createWorkbook(
+                    new File(p.toString()), Workbook.getWorkbook(
+                            new File(filePath)));
+            var sheets = xlsFile.getSheets();
+            if(sheets.length <1) return;
+
+            var excelSheet = sheets[0];
+
+            createData(excelSheet, newRow);
+
+            xlsFile.write();
+            xlsFile.close();
+
+
+        } catch (WriteException | BiffException e) {
+            e.printStackTrace();
         }
     }
 
@@ -47,14 +55,19 @@ public class Write {
      * @param p путь к файлу
      * @throws IOException
      */
-    private void createFile(Path p) throws IOException {
-        Files.createFile(p);
-        try (BufferedOutputStream fos = new BufferedOutputStream(new FileOutputStream(p.toString()))) {
-            Workbook workbook = new HSSFWorkbook();
-            workbook.createSheet("Ready");
-            workbook.write(fos);
-            workbook.close();
+    private void createFile(Path p) throws IOException, WriteException {
+        WritableWorkbook xlsFile = Workbook.createWorkbook(new File(p.toString()));
+        WritableSheet excelSheet = xlsFile.createSheet("Tournament", 0);
+
+        //У счета фиксированная длинна
+        for (int c = 1; c < 9; c++) {
+            CellView cell = excelSheet.getColumnView(c);
+            cell.setSize(800);
+            excelSheet.setColumnView(c, cell);
         }
+
+        xlsFile.write();
+        xlsFile.close();
     }
 
     /**
@@ -97,12 +110,11 @@ public class Write {
 
     /**
      * Метод генерирует строки xls файла
-     * @param sheet xls страница
+     * @param sheet страница xls файла
      * @param newRow хэшмап с данными
      */
-    public void createData(Sheet sheet, HashMap<String, String> newRow){
-        int rowCount = sheet.getPhysicalNumberOfRows();
-
+    public void createData(WritableSheet sheet, HashMap<String, String> newRow) throws WriteException {
+        int rowCount = sheet.getRows();
 
         for (String key: newRow.keySet()) {
             String[] names= parsName(key);
@@ -111,34 +123,34 @@ public class Write {
             if(names.length !=2 || scores == null)
                 continue;
 
-            Row row = sheet.createRow(rowCount+=2);
 
             for(int i =0; i<names.length; i++){
-                row = sheet.createRow(rowCount+=1);
-                Cell cellName = row.createCell(0);
-                cellName.setCellValue(names[i]);
-                sheet.autoSizeColumn(0);
+                Label name = new Label(0, rowCount+=1, names[i]);
+                sheet.addCell(name);
 
                 for (int cellIndex = 1, j=0; j < scores[i].length; cellIndex++, j++) {
-
-                    Cell cell = row.createCell(cellIndex);
-                    cell.setCellValue(scores[i][j]);
-
-                    sheet.autoSizeColumn(cellIndex);
-
+                    Label score = new Label(cellIndex, rowCount, scores[i][j]);
+                    sheet.addCell(score);
                 }
 
                 if(i==0){
                     Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
                     Date date = calendar.getTime();
 
-                    Cell cell = row.createCell(9);
-                    cell.setCellValue(date.toString());
-                    sheet.autoSizeColumn(9);
+                    Label score = new Label(9, rowCount, date.toString());
+                    sheet.addCell(score);
                 }
 
             }
-
         }
+
+        //Для имени и даты ставим автосайз
+        CellView cellName = sheet.getColumnView(0);
+        cellName.setAutosize(true);
+        sheet.setColumnView(0, cellName);
+
+        CellView cellDate = sheet.getColumnView(sheet.getColumns());
+        cellDate.setAutosize(true);
+        sheet.setColumnView(sheet.getColumns()-1, cellDate);
     }
 }
