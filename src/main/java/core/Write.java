@@ -4,9 +4,12 @@ import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.biff.EmptyCell;
+<<<<<<< Updated upstream
 import jxl.format.Format;
 import jxl.CellView;
 
+=======
+>>>>>>> Stashed changes
 import jxl.read.biff.BiffException;
 import jxl.write.*;
 
@@ -24,7 +27,6 @@ public class Write {
      * @throws IOException кидается при невозможности записать файл
      */
     public void writeToXLS(HashMap<String, String> newRow, String fileName) throws IOException {
-
 
         Path p = Paths.get(fileName+".xls");
         String filePath = p.toString();
@@ -158,6 +160,7 @@ public class Write {
         sheet.setColumnView(sheet.getColumns()-1, cellDate);
     }
 
+<<<<<<< Updated upstream
     /**
      * Метод получает название нужного файла из conectionform и открывает его.
      * После вызывает метод обработки файла.
@@ -248,5 +251,7 @@ public class Write {
 
     }
 
+=======
+>>>>>>> Stashed changes
 }
 
