@@ -7,7 +7,7 @@
     <groupId>meogolAndEugeneFolkast</groupId>
     <artifactId>HUMBot</artifactId>
   
-    <version>1.110-Relise</version>
+    <version>1.120-Relise</version>
 
     <properties>
         <maven.compiler.source>15</maven.compiler.source>
