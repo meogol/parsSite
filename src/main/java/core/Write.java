@@ -206,15 +206,22 @@ public class Write {
         for (int i=0; i<=numberOfRows; i++){
 
             if (sheet.getCell(0,i).getClass() == EmptyCell.class) continue;
+
             Cell sportsmanName = sheet.getCell(0,i);
 
             if (sheet.getCell(1,i).getClass() == EmptyCell.class) continue;
+
             Cell sportsmanResult = sheet.getCell(1, i);
             String content = sportsmanName.getContents();
+
+
             if (sportsmanScore.containsKey(sportsmanName.getContents())){
+
                 int buff = sportsmanScore.get(content);
                 sportsmanScore.put(sportsmanName.getContents(), buff + Integer.valueOf(sportsmanResult.getContents()));
+
             }
+
             else {
                 sportsmanScore.put(sportsmanName.getContents(), Integer.valueOf(sportsmanResult.getContents()));
             }
@@ -222,11 +229,16 @@ public class Write {
 
         int i=0;
         for (String key: sportsmanScore.keySet()) {
+
             Label sportsmanName = new Label(15,i,"" + key);
             Label sportsmanResult = new Label(16,i,"" + sportsmanScore.get(key));
+
+
             try {
+
                 excelSheet.addCell(sportsmanName);
                 excelSheet.addCell(sportsmanResult);
+
             } catch (WriteException e) {
                 e.printStackTrace();
             }
