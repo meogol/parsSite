@@ -235,4 +235,71 @@ public class Write {
 
 
     }
+
+    /**
+     * Чтение *.xls файла, выбранного в диалоговом окне
+     * @param fileName - имя файла из диалогового окна
+     */
+    public void readXls(String fileName){
+        try (BufferedInputStream fis = new BufferedInputStream(new FileInputStream(fileName))) {
+            Workbook workbook = new HSSFWorkbook(fis);
+            Sheet sheet = workbook.getSheetAt(0);
+
+            filePars(sheet);
+            try (BufferedOutputStream fio = new BufferedOutputStream(new FileOutputStream(fileName))) {
+                workbook.write(fio);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Парсинг файла с дальнейшей записью
+     * @param sheet - лист, прочтённый в методе readXls
+     */
+    private void filePars(Sheet sheet){
+        int rowCount = sheet.getPhysicalNumberOfRows();
+        Row row;
+        String sportsmanName = "";
+        int sportsmanScoreOnTable;
+        HashMap<String, Integer> sportsmanScore = new HashMap<>();
+
+
+        for (int i=3;i<=rowCount;i++){
+            row = sheet.getRow(i);
+
+            if (row == null ) continue;
+                if ((row.getCell(0).getCellType() == HSSFCell.CELL_TYPE_STRING)) {
+
+                    sportsmanName = row.getCell(0).getStringCellValue();
+                    sportsmanScoreOnTable = Integer.valueOf(row.getCell(1).getStringCellValue());
+
+                    if(sportsmanScore.containsKey(sportsmanName)){
+                        int k = sportsmanScore.get(sportsmanName);
+                        sportsmanScore.put(sportsmanName,(k + sportsmanScoreOnTable));
+                    }
+                    else {
+                        sportsmanScore.put(sportsmanName,sportsmanScoreOnTable);
+                    }
+
+                } else continue;
+        }
+        int k=3;
+        for (String key:sportsmanScore.keySet()) {
+            row = sheet.getRow(k);
+            if (row == null ) {
+                k++;
+                continue;
+            }
+            Cell cellName = row.createCell(14);
+            Cell cellScore = row.createCell(15);
+            cellName.setCellValue(key);
+            cellScore.setCellValue(sportsmanScore.get(key));
+            k++;
+
+        }
+
+
+    }
 }
