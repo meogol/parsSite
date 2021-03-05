@@ -5,6 +5,8 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.biff.EmptyCell;
 import jxl.format.Format;
+import jxl.CellView;
+
 import jxl.read.biff.BiffException;
 import jxl.write.*;
 
@@ -61,6 +63,13 @@ public class Write {
         WritableWorkbook xlsFile = Workbook.createWorkbook(new File(p.toString()));
         WritableSheet excelSheet = xlsFile.createSheet("Tournament", 0);
 
+        //У счета фиксированная длинна
+        for (int c = 1; c < 9; c++) {
+            CellView cell = excelSheet.getColumnView(c);
+            cell.setSize(800);
+            excelSheet.setColumnView(c, cell);
+        }
+
         xlsFile.write();
         xlsFile.close();
     }
@@ -90,10 +99,10 @@ public class Write {
 
         if(parsScore.length<=2)
             return null;
-//        if((parsScore[0].equals("0") && parsScore[parsScore.length / 2].equals("0")) ||
-//                (Integer.parseInt(parsScore[0])+ Integer.parseInt(parsScore[parsScore.length / 2]) != parsScore.length / 2 - 1)){
-//            return null;
-//        }
+        if((parsScore[0].equals("0") && parsScore[parsScore.length / 2].equals("0")) ||
+                (Integer.parseInt(parsScore[0])+ Integer.parseInt(parsScore[parsScore.length / 2]) != parsScore.length / 2 - 1)){
+            return null;
+        }
 
         return new String[][]{
                 Arrays.copyOf(parsScore, parsScore.length / 2),
@@ -105,12 +114,11 @@ public class Write {
 
     /**
      * Метод генерирует строки xls файла
-     //* @param sheet xls страница
+     * @param sheet страница xls файла
      * @param newRow хэшмап с данными
      */
     public void createData(WritableSheet sheet, HashMap<String, String> newRow) throws WriteException {
         int rowCount = sheet.getRows();
-
 
         for (String key: newRow.keySet()) {
             String[] names= parsName(key);
@@ -139,6 +147,15 @@ public class Write {
 
             }
         }
+
+        //Для имени и даты ставим автосайз
+        CellView cellName = sheet.getColumnView(0);
+        cellName.setAutosize(true);
+        sheet.setColumnView(0, cellName);
+
+        CellView cellDate = sheet.getColumnView(sheet.getColumns());
+        cellDate.setAutosize(true);
+        sheet.setColumnView(sheet.getColumns()-1, cellDate);
     }
 
     /**
