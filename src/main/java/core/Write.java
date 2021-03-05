@@ -1,6 +1,7 @@
 package core;
 
 import jxl.Workbook;
+import jxl.format.Format;
 import jxl.read.biff.BiffException;
 import jxl.write.*;
 
@@ -31,13 +32,13 @@ public class Write {
 
             WritableWorkbook xlsFile = Workbook.createWorkbook(
                     new File(p.toString()), Workbook.getWorkbook(
-                            new File(p.toString())));
-            var s = xlsFile.getSheets();
-            var excelSheet = s[0];
+                            new File(filePath)));
+            var sheets = xlsFile.getSheets();
+            if(sheets.length <1) return;
 
+            var excelSheet = sheets[0];
 
-            Label label = new Label(0, excelSheet.getRows()+1, "Test Count");
-            excelSheet.addCell(label);
+            createData(excelSheet, newRow);
 
             xlsFile.write();
             xlsFile.close();
@@ -46,19 +47,6 @@ public class Write {
         } catch (WriteException | BiffException e) {
             e.printStackTrace();
         }
-
-        //
-//        try (BufferedInputStream fis = new BufferedInputStream(new FileInputStream(filePath))) {
-//            Workbook workbook = new HSSFWorkbook(fis);
-//            Sheet sheet = workbook.getSheetAt(0);
-//
-//            createData(sheet, newRow);
-//
-//
-//            try (BufferedOutputStream fio = new BufferedOutputStream(new FileOutputStream(filePath))) {
-//                workbook.write(fio);
-//            }
-//        }
     }
 
     /**
@@ -68,7 +56,7 @@ public class Write {
      */
     private void createFile(Path p) throws IOException, WriteException {
         WritableWorkbook xlsFile = Workbook.createWorkbook(new File(p.toString()));
-        WritableSheet excelSheet = xlsFile.createSheet("test", 0);
+        WritableSheet excelSheet = xlsFile.createSheet("Tournament", 0);
 
         xlsFile.write();
         xlsFile.close();
@@ -99,10 +87,10 @@ public class Write {
 
         if(parsScore.length<=2)
             return null;
-        if((parsScore[0].equals("0") && parsScore[parsScore.length / 2].equals("0")) ||
-                (Integer.parseInt(parsScore[0])+ Integer.parseInt(parsScore[parsScore.length / 2]) != parsScore.length / 2 - 1)){
-            return null;
-        }
+//        if((parsScore[0].equals("0") && parsScore[parsScore.length / 2].equals("0")) ||
+//                (Integer.parseInt(parsScore[0])+ Integer.parseInt(parsScore[parsScore.length / 2]) != parsScore.length / 2 - 1)){
+//            return null;
+//        }
 
         return new String[][]{
                 Arrays.copyOf(parsScore, parsScore.length / 2),
@@ -117,55 +105,36 @@ public class Write {
      //* @param sheet xls страница
      * @param newRow хэшмап с данными
      */
-    public void createData(/*Sheet sheet,*/ HashMap<String, String> newRow){
-//        int rowCount = sheet.getPhysicalNumberOfRows()+2;
-//
-//
-//        for (String key: newRow.keySet()) {
-//            String[] names= parsName(key);
-//            String[][] scores = parsScore(newRow.get(key));
-//
-//            if(names.length !=2 || scores == null)
-//                continue;
-//
-//            Row row = sheet.createRow(rowCount+=2);
-//
-//            System.out.println();
-//            System.out.println();
-//            System.out.println();
-//            System.out.println();
-//            System.out.println(Arrays.toString(names));
-//            System.out.println(Arrays.deepToString(scores));
-//
-//            for(int i =0; i<names.length; i++){
-//                row = sheet.createRow(rowCount+=1);
-//                Cell cellName = row.createCell(0);
-//                cellName.setCellValue(names[i]);
-//                sheet.autoSizeColumn(0);
-//                System.out.println();
-//
-//                System.out.print(names[i] +"CV"+cellName.getStringCellValue());
-//
-//                for (int cellIndex = 1, j=0; j < scores[i].length; cellIndex++, j++) {
-//
-//                    Cell cell = row.createCell(cellIndex);
-//                    cell.setCellValue(scores[i][j]);
-//
-//                    sheet.autoSizeColumn(cellIndex);
-//                    System.out.print(" "+scores[i][j] +"CV"+cell.getStringCellValue());
-//
-//                }
-//
-//                if(i==0){
-//                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
-//                    Date date = calendar.getTime();
-//
-//                    Cell cell = row.createCell(9);
-//                    cell.setCellValue(date.toString());
-//                    sheet.autoSizeColumn(9);
-//                }
-//
-//            }
-//        }
+    public void createData(WritableSheet sheet, HashMap<String, String> newRow) throws WriteException {
+        int rowCount = sheet.getRows();
+
+
+        for (String key: newRow.keySet()) {
+            String[] names= parsName(key);
+            String[][] scores = parsScore(newRow.get(key));
+
+            if(names.length !=2 || scores == null)
+                continue;
+
+
+            for(int i =0; i<names.length; i++){
+                Label name = new Label(0, rowCount+=1, names[i]);
+                sheet.addCell(name);
+
+                for (int cellIndex = 1, j=0; j < scores[i].length; cellIndex++, j++) {
+                    Label score = new Label(cellIndex, rowCount, scores[i][j]);
+                    sheet.addCell(score);
+                }
+
+                if(i==0){
+                    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Europe/Moscow"));
+                    Date date = calendar.getTime();
+
+                    Label score = new Label(9, rowCount, date.toString());
+                    sheet.addCell(score);
+                }
+
+            }
+        }
     }
 }
