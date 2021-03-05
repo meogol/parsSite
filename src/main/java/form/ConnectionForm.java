@@ -235,7 +235,7 @@ public class ConnectionForm extends JFrame {
             w.readXls(fileName);
         } catch (IOException e) {
             e.printStackTrace();
-            showMessageDialog(this,"Ошибка записис в файл");
+            showMessageDialog(this,"Ошибка записи в файл");
         }
 
     }
