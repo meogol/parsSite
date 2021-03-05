@@ -3,13 +3,6 @@ package form;
 import core.ParsMatches;
 import core.Write;
 import core.load.Load;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 
 import javax.swing.*;
 import java.awt.*;
@@ -238,7 +231,11 @@ public class ConnectionForm extends JFrame {
             showMessageDialog(this,"Вы выбрали "+fileName);
 
         Write w = new Write();
-        w.readXls(fileName);
+        try {
+            w.readXls(fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

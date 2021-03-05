@@ -1,6 +1,9 @@
 package core;
 
+import jxl.Cell;
+import jxl.Sheet;
 import jxl.Workbook;
+import jxl.biff.EmptyCell;
 import jxl.format.Format;
 import jxl.read.biff.BiffException;
 import jxl.write.*;
@@ -139,136 +142,82 @@ public class Write {
     }
 
     /**
-     * Чтение *.xls файла, выбранного в диалоговом окне
-     * @param fileName - имя файла из диалогового окна
+     * Метод получает название нужного файла из conectionform и открывает его.
+     * После вызывает метод обработки файла.
+     * @param fileName
+     * @throws IOException
      */
-    public void readXls(String fileName){
-        try (BufferedInputStream fis = new BufferedInputStream(new FileInputStream(fileName))) {
-            Workbook workbook = new HSSFWorkbook(fis);
-            Sheet sheet = workbook.getSheetAt(0);
+    public void readXls (String fileName) throws IOException{
+        Path p = Paths.get(fileName);
+        String filePath = p.toString();
 
-            filePars(sheet);
-            try (BufferedOutputStream fio = new BufferedOutputStream(new FileOutputStream(fileName))) {
-                workbook.write(fio);
-            }
-        } catch (IOException e) {
+
+        try {
+
+            WritableWorkbook xlsFile = Workbook.createWorkbook(
+                    new File(p.toString()), Workbook.getWorkbook(
+                            new File(filePath)));
+            var sheets = xlsFile.getSheets();
+            if(sheets.length <1) return;
+
+            var excelSheet = sheets[0];
+
+            writeToXls(excelSheet, xlsFile);
+
+            xlsFile.write();
+            xlsFile.close();
+
+
+        } catch (WriteException | BiffException e) {
             e.printStackTrace();
         }
+
     }
 
+
     /**
-     * Парсинг файла с дальнейшей записью
-     * @param sheet - лист, прочтённый в методе readXls
+     * Метод парсит эксельник, отображая справа от полей всех игроков с финальным счётом.
+     * @param excelSheet
+     * @param xlsFile
      */
-    private void filePars(Sheet sheet){
-        int rowCount = sheet.getPhysicalNumberOfRows();
-        Row row;
-        String sportsmanName = "";
-        int sportsmanScoreOnTable;
+    public void writeToXls(WritableSheet excelSheet, WritableWorkbook xlsFile){
         HashMap<String, Integer> sportsmanScore = new HashMap<>();
+        Sheet sheet = xlsFile.getSheet(0);
+        int numberOfRows = sheet.getRows();
 
 
-        for (int i=3;i<=rowCount;i++){
-            row = sheet.getRow(i);
+        for (int i=0; i<=numberOfRows; i++){
 
-            if (row == null ) continue;
-                if ((row.getCell(0).getCellType() == HSSFCell.CELL_TYPE_STRING)) {
+            if (sheet.getCell(0,i).getClass() == EmptyCell.class) continue;
+            Cell sportsmanName = sheet.getCell(0,i);
 
-                    sportsmanName = row.getCell(0).getStringCellValue();
-                    sportsmanScoreOnTable = Integer.valueOf(row.getCell(1).getStringCellValue());
-
-                    if(sportsmanScore.containsKey(sportsmanName)){
-                        int k = sportsmanScore.get(sportsmanName);
-                        sportsmanScore.put(sportsmanName,(k + sportsmanScoreOnTable));
-                    }
-                    else {
-                        sportsmanScore.put(sportsmanName,sportsmanScoreOnTable);
-                    }
-
-                } else continue;
-        }
-        int k=3;
-        for (String key:sportsmanScore.keySet()) {
-            row = sheet.getRow(k);
-            if (row == null ) {
-                k++;
-                continue;
+            if (sheet.getCell(1,i).getClass() == EmptyCell.class) continue;
+            Cell sportsmanResult = sheet.getCell(1, i);
+            String content = sportsmanName.getContents();
+            if (sportsmanScore.containsKey(sportsmanName.getContents())){
+                int buff = sportsmanScore.get(content);
+                sportsmanScore.put(sportsmanName.getContents(), buff + Integer.valueOf(sportsmanResult.getContents()));
             }
-            Cell cellName = row.createCell(14);
-            Cell cellScore = row.createCell(15);
-            cellName.setCellValue(key);
-            cellScore.setCellValue(sportsmanScore.get(key));
-            k++;
-
+            else {
+                sportsmanScore.put(sportsmanName.getContents(), Integer.valueOf(sportsmanResult.getContents()));
+            }
         }
 
+        int i=0;
+        for (String key: sportsmanScore.keySet()) {
+            Label sportsmanName = new Label(15,i,"" + key);
+            Label sportsmanResult = new Label(16,i,"" + sportsmanScore.get(key));
+            try {
+                excelSheet.addCell(sportsmanName);
+                excelSheet.addCell(sportsmanResult);
+            } catch (WriteException e) {
+                e.printStackTrace();
+            }
+
+            i++;
+        }
 
     }
 
-    /**
-     * Чтение *.xls файла, выбранного в диалоговом окне
-     * @param fileName - имя файла из диалогового окна
-     */
-    public void readXls(String fileName){
-        try (BufferedInputStream fis = new BufferedInputStream(new FileInputStream(fileName))) {
-            Workbook workbook = new HSSFWorkbook(fis);
-            Sheet sheet = workbook.getSheetAt(0);
-
-            filePars(sheet);
-            try (BufferedOutputStream fio = new BufferedOutputStream(new FileOutputStream(fileName))) {
-                workbook.write(fio);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Парсинг файла с дальнейшей записью
-     * @param sheet - лист, прочтённый в методе readXls
-     */
-    private void filePars(Sheet sheet){
-        int rowCount = sheet.getPhysicalNumberOfRows();
-        Row row;
-        String sportsmanName = "";
-        int sportsmanScoreOnTable;
-        HashMap<String, Integer> sportsmanScore = new HashMap<>();
-
-
-        for (int i=3;i<=rowCount;i++){
-            row = sheet.getRow(i);
-
-            if (row == null ) continue;
-                if ((row.getCell(0).getCellType() == HSSFCell.CELL_TYPE_STRING)) {
-
-                    sportsmanName = row.getCell(0).getStringCellValue();
-                    sportsmanScoreOnTable = Integer.valueOf(row.getCell(1).getStringCellValue());
-
-                    if(sportsmanScore.containsKey(sportsmanName)){
-                        int k = sportsmanScore.get(sportsmanName);
-                        sportsmanScore.put(sportsmanName,(k + sportsmanScoreOnTable));
-                    }
-                    else {
-                        sportsmanScore.put(sportsmanName,sportsmanScoreOnTable);
-                    }
-
-                } else continue;
-        }
-        int k=3;
-        for (String key:sportsmanScore.keySet()) {
-            row = sheet.getRow(k);
-            if (row == null ) {
-                k++;
-                continue;
-            }
-            Cell cellName = row.createCell(14);
-            Cell cellScore = row.createCell(15);
-            cellName.setCellValue(key);
-            cellScore.setCellValue(sportsmanScore.get(key));
-            k++;
-
-        }
-
-
-    }
 }
+
