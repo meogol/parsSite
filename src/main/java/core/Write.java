@@ -48,6 +48,7 @@ public class Write {
 
         }
         catch (NullPointerException ex){
+
             createFile(p);
             throw ex;
         }
