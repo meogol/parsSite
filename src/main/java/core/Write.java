@@ -46,6 +46,10 @@ public class Write {
             xlsFile.write();
 
         }
+        catch (NullPointerException ex){
+            createFile(p);
+            throw ex;
+        }
         finally {
                 xlsFile.close();
         }

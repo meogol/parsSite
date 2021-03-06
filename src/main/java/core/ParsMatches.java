@@ -87,8 +87,11 @@ public class ParsMatches implements Runnable{
             saveDontWriteMatches(thisMatches,writeMatches);
         } catch (BiffException | WriteException e) {
             LOG.info(e.toString());
+            saveDontWriteMatches(thisMatches,writeMatches);
+
         }catch (Exception ex) {
             LOG.info(ex.toString());
+            saveDontWriteMatches(thisMatches,writeMatches);
         }
     }
 
