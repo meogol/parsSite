@@ -46,6 +46,10 @@ public class Write {
             xlsFile.write();
 
         }
+        catch (NullPointerException ex){
+            createFile(p);
+            throw ex;
+        }
         finally {
                 xlsFile.close();
         }
@@ -78,6 +82,8 @@ public class Write {
      */
     private String[] parsName(String key){
         String[] parsKey = key.trim().split("\\) ");
+
+        if(parsKey.length < 2) return null;
 
         String nameOne = parsKey[0]+")";
         String nameTwo = parsKey[1].replace(")","")+")";
@@ -121,7 +127,7 @@ public class Write {
             String[] names= parsName(key);
             String[][] scores = parsScore(newRow.get(key));
 
-            if(names.length !=2 || scores == null)
+            if(names == null || scores == null)
                 continue;
 
 

@@ -83,12 +83,15 @@ public class ParsMatches implements Runnable{
 
         }catch (IOException ex)
         {
-            LOG.info("Задержка записи: "+ex.toString());
+            LOG.info("thread "+hashKey+" "+"Задержка записи: "+ex.toString());
             saveDontWriteMatches(thisMatches,writeMatches);
         } catch (BiffException | WriteException e) {
-            LOG.info(e.toString());
+            LOG.info("thread "+hashKey+" "+e.toString());
+            saveDontWriteMatches(thisMatches,writeMatches);
+
         }catch (Exception ex) {
-            LOG.info(ex.toString());
+            LOG.info("thread "+hashKey+" "+ex.toString());
+            saveDontWriteMatches(thisMatches,writeMatches);
         }
     }
 
