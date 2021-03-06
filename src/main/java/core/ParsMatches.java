@@ -2,6 +2,8 @@ package core;
 
 import form.ConnectionForm;
 import core.load.Load;
+import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,8 +83,12 @@ public class ParsMatches implements Runnable{
 
         }catch (IOException ex)
         {
-            LOG.info(ex.toString());
+            LOG.info("Задержка записи: "+ex.toString());
             saveDontWriteMatches(thisMatches,writeMatches);
+        } catch (BiffException | WriteException e) {
+            LOG.info(e.toString());
+        }catch (Exception ex) {
+            LOG.info(ex.toString());
         }
     }
 

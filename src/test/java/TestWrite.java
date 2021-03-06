@@ -1,4 +1,6 @@
 import core.Write;
+import jxl.read.biff.BiffException;
+import jxl.write.WriteException;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -6,7 +8,7 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class TestWrite {
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, BiffException, WriteException {
         HashMap<String, String> h = new HashMap<>();
         Random random = new Random();
 

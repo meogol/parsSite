@@ -58,7 +58,7 @@ public class ConnectionForm extends JFrame {
         sportSelectButton.addActionListener(e -> onSelectSport(selectedSport, selectedMatches));
 
         addSavingUrlToExit();
-
+        sportsManButton.setEnabled(false);
         sportsManButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

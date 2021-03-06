@@ -4,12 +4,8 @@ import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.biff.EmptyCell;
-<<<<<<< Updated upstream
-import jxl.format.Format;
 import jxl.CellView;
 
-=======
->>>>>>> Stashed changes
 import jxl.read.biff.BiffException;
 import jxl.write.*;
 
@@ -26,18 +22,18 @@ public class Write {
      * @param fileName имя файла
      * @throws IOException кидается при невозможности записать файл
      */
-    public void writeToXLS(HashMap<String, String> newRow, String fileName) throws IOException {
+    public void writeToXLS(HashMap<String, String> newRow, String fileName) throws IOException, WriteException, BiffException {
 
         Path p = Paths.get(fileName+".xls");
         String filePath = p.toString();
 
-
+        WritableWorkbook xlsFile = null;
         try {
             if (!Files.exists(p)) {
                 createFile(p);
             }
 
-            WritableWorkbook xlsFile = Workbook.createWorkbook(
+            xlsFile = Workbook.createWorkbook(
                     new File(p.toString()), Workbook.getWorkbook(
                             new File(filePath)));
             var sheets = xlsFile.getSheets();
@@ -48,11 +44,10 @@ public class Write {
             createData(excelSheet, newRow);
 
             xlsFile.write();
-            xlsFile.close();
 
-
-        } catch (WriteException | BiffException e) {
-            e.printStackTrace();
+        }
+        finally {
+                xlsFile.close();
         }
     }
 
@@ -160,7 +155,6 @@ public class Write {
         sheet.setColumnView(sheet.getColumns()-1, cellDate);
     }
 
-<<<<<<< Updated upstream
     /**
      * Метод получает название нужного файла из conectionform и открывает его.
      * После вызывает метод обработки файла.
@@ -251,7 +245,5 @@ public class Write {
 
     }
 
-=======
->>>>>>> Stashed changes
 }
 
