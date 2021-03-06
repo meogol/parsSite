@@ -47,7 +47,6 @@ public class Load {
             LOG.error(e.toString());
             loadUrl();
             return loadMenu();
-
         }
 
     }
