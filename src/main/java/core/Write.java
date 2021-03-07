@@ -1,5 +1,6 @@
 package core;
 
+import core.data.Winrate;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
@@ -201,46 +202,58 @@ public class Write {
      * @param xlsFile
      */
     public void writeToXls(WritableSheet excelSheet, WritableWorkbook xlsFile){
-        HashMap<String, Integer> sportsmanScore = new HashMap<>();
+        HashMap<String, Winrate> sportsmanScore = new HashMap<>();
         Sheet sheet = xlsFile.getSheet(0);
         int numberOfRows = sheet.getRows();
-
 
         for (int i=0; i<=numberOfRows; i++){
 
             if (sheet.getCell(0,i).getClass() == EmptyCell.class) continue;
 
-            Cell sportsmanName = sheet.getCell(0,i);
+            Cell sportsmanNameOne = sheet.getCell(0,i);
+            Cell sportsmanNameTwo = sheet.getCell(0,i+1);
 
             if (sheet.getCell(1,i).getClass() == EmptyCell.class) continue;
 
-            Cell sportsmanResult = sheet.getCell(1, i);
-            String content = sportsmanName.getContents();
+            Cell sportsmanResultOne = sheet.getCell(1, i);
+            Cell sportsmanResultTwo = sheet.getCell(1, i+1);
 
 
-            if (sportsmanScore.containsKey(sportsmanName.getContents())){
-
-                int buff = sportsmanScore.get(content);
-                sportsmanScore.put(sportsmanName.getContents(), buff + Integer.valueOf(sportsmanResult.getContents()));
-
+            if (!sportsmanScore.containsKey(sportsmanNameOne.getContents())){
+                sportsmanScore.put(sportsmanNameOne.getContents(), new Winrate());
+            }
+            if (!sportsmanScore.containsKey(sportsmanNameTwo.getContents())){
+                sportsmanScore.put(sportsmanNameTwo.getContents(), new Winrate());
             }
 
-            else {
-                sportsmanScore.put(sportsmanName.getContents(), Integer.valueOf(sportsmanResult.getContents()));
+            int scoreOne = Integer.parseInt(sportsmanResultOne.getContents());
+            int scoreTwo = Integer.parseInt(sportsmanResultTwo.getContents());
+
+            if(scoreOne>scoreTwo) {
+                sportsmanScore.get(sportsmanNameOne.getContents()).addWin(scoreOne);
+                sportsmanScore.get(sportsmanNameTwo.getContents()).addLouse(scoreTwo);
+            }else{
+                sportsmanScore.get(sportsmanNameTwo.getContents()).addWin(scoreOne);
+                sportsmanScore.get(sportsmanNameOne.getContents()).addLouse(scoreTwo);
             }
+
+
+            i+=1;
         }
 
         int i=0;
         for (String key: sportsmanScore.keySet()) {
 
             Label sportsmanName = new Label(15,i,"" + key);
-            Label sportsmanResult = new Label(16,i,"" + sportsmanScore.get(key));
+            Label sportsmanResultWin = new Label(16,i,"" + sportsmanScore.get(key).getWin());
+            Label sportsmanResultLouse = new Label(17,i,"" + sportsmanScore.get(key).getLouse());
 
 
             try {
 
                 excelSheet.addCell(sportsmanName);
-                excelSheet.addCell(sportsmanResult);
+                excelSheet.addCell(sportsmanResultWin);
+                excelSheet.addCell(sportsmanResultLouse);
 
             } catch (WriteException e) {
                 e.printStackTrace();
@@ -248,6 +261,10 @@ public class Write {
 
             i++;
         }
+
+        CellView cellName = sheet.getColumnView(15);
+        cellName.setAutosize(true);
+        excelSheet.setColumnView(15, cellName);
 
     }
 
