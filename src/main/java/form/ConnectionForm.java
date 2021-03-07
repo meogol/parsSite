@@ -126,7 +126,6 @@ public class ConnectionForm extends JFrame {
         Runnable run = () -> {
             progressBar.setIndeterminate(true);
             sportSelectButton.setEnabled(false);
-            buttonStart.setEnabled(false);
             mapTour.clear();
 
             for (String key : listSportSelect.getSelectedValuesList()) {
